@@ -68,3 +68,4 @@ const StartButton = styled.button`
   left : 50%;
   transform: translateX(-50%);
 `
+
