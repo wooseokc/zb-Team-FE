@@ -4,13 +4,15 @@ import Layout from "../components/layout";
 import Navbar from "../components/navbar";
 import RankBox from "../components/index/RankBox";
 import Start from "../components/index/StartBox";
+import AccountBox from '../components/index/AccountBox';
 
 export default function Home () {
 
   return (
     <>
       <RankBox/>
-      <Start/>
+      <Start />
+      <AccountBox />
     </>
   )
 }
