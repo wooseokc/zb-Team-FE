@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
+import Layout from '../../components/layout';
+import Navbar from '../../components/navbar';
 
 
 function Account() {
@@ -9,7 +11,11 @@ function Account() {
   }
   return (
     <StyleForm onSubmit={onSubmit}>
-      <div><span>ID</span><input type='email' required placeholder='Email을 입력해주세요' /><button>이메일인증</button></div>
+      <div>
+        <span>ID</span>
+        <input type='email' required placeholder='Email을 입력해주세요' />
+        <input className='emailBtn' type='button' value='이메일인증' />
+      </div>
       <div><span>인증번호</span><input type='text' required /></div>
       <div><span>패스워드</span><input type='password' required placeholder='비밀번호를 입력해주세요' /></div>
       <div><span>닉네임</span><input type='text' required placeholder='닉네임' /></div>
@@ -18,10 +24,18 @@ function Account() {
   )
 }
 
+Account.getLayout = function getLayout(page) {
+  return (
+    <Layout>
+      <Navbar />
+      {page}
+    </Layout>
+  )
+}
 
 const StyleForm = styled.form`
   width: 100%;
-  max-width: 500px;
+  max-width: 400px;
   
   border: 1px solid black;
 
@@ -36,7 +50,13 @@ const StyleForm = styled.form`
     display: flex;
     align-items: center;
     margin: 10px 0;
+    .emailBtn {
+      cursor: pointer;
+
+      margin-left: 10px;
+    }
   }
+
   span {
     width: 100px;
 
@@ -44,6 +64,7 @@ const StyleForm = styled.form`
   }
   input {
     height: 25px;
+    box-sizing: border-box;
     
     padding: 0;
   }
@@ -53,6 +74,8 @@ const StyleForm = styled.form`
     margin: 0 auto;
     input { 
       width: 100%;
+
+      cursor: pointer;
     }
   }
 `;
