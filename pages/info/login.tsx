@@ -1,5 +1,6 @@
 import React from "react";
-import { Test } from "./logInStyle";
+import Layout from "../../components/layout";
+import Navbar from "../../components/navbar";
 
 export default function login () {
 
@@ -7,5 +8,15 @@ export default function login () {
     <div>
       로그인 페이지입니다
     </div>
+  )
+}
+
+
+login.getLayout = function getLayout(page) {
+  return (
+    <Layout>
+      <Navbar />
+      {page}
+    </Layout>
   )
 }

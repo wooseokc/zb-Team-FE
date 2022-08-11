@@ -16,7 +16,7 @@ export default function Navbar() {
           <NavButton>랭킹보기</NavButton>
         </Link>
         <Link href="/info/mypage">
-          <NavButton>Contact</NavButton>
+          <NavButton>마이페이지</NavButton>
         </Link>
       </NavListBox>
       <Link href="/info/login">

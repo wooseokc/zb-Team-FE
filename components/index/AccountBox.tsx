@@ -1,26 +1,38 @@
 import React from "react";
+import Link from "next/link";
 import styled from "styled-components";
 
 export default function AccountBox () {
 
   return (
-    <Stylesection>
-      <button>회원가입</button>
-    </Stylesection>
+    <StyleSection>
+      <Link href="/info/login">
+        <AccountButton>로그인</AccountButton>
+      </Link>
+      <Link href="/info/account">
+        <AccountButton>회원가입</AccountButton>
+      </Link>
+    </StyleSection>
   )
 }
 
-const Stylesection = styled.section`
-  position: relative;
-  top: 100px;
-  /* border: 1px solid black; */
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
+const StyleSection = styled.section`
+  width : 150px;
 
-  button {
-    width: 100px;
-    height: 50px;
-  }
-`;
+  position: relative;
+  left : 50%;
+  transform: translateX(-50%);
+  top: 100px;
+  
+  display: flex;
+  justify-content: space-between;
+`
+
+const AccountButton = styled.button`
+  background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer;
+
+  width : 70px;
+  border : 1px solid;
+  border-radius: 10px;
+`
 

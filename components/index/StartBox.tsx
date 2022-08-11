@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import styled from "styled-components";
 
 export default function Start () {
@@ -11,7 +12,9 @@ export default function Start () {
         <Radio type={"radio"} name={'gamemode'} id={'multi'}/>
         <Label htmlFor="multi">멀티</Label>
       </GameModeBox>
-      <StartButton>시작!</StartButton>
+      <Link href="/game/single">
+        <StartButton>시작!</StartButton>
+      </Link>
     </StartSection>
 
   )
