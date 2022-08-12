@@ -1,9 +1,9 @@
 import React from "react";
+import Link  from 'next/link';
 import styled from 'styled-components';
-import Layout from "../../components/layout";
-import Navbar from "../../components/navbar";
 
-export default function login() {
+
+export default function Login() {
   
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -11,22 +11,14 @@ export default function login() {
 
   return (
     <StyleForm onSubmit={onSubmit}>
-      <div><span>ID</span><input type='email' required placeholder='Email을 입력해주세요' /><input type='button' value='이메일 인증' /></div>
-      <div><span>인증번호</span><input type='password' required placeholder='비밀번호를 입력해주세요' /></div>
-      <div><input type='submit' value='완료' /></div>
+      <div><span>ID</span><input type='email' required placeholder='Email을 입력해주세요' /></div>
+      <div><span>패스워드</span><input type='password' required placeholder='비밀번호를 입력해주세요' /></div>
+      <Link href="/info/password">비밀번호 찾기</Link>
+      <div><input type='submit' value='로그인' /></div>
     </StyleForm>
   )
 }
 
-
-login.getLayout = function getLayout(page) {
-  return (
-    <Layout>
-      <Navbar />
-      {page}
-    </Layout>
-  )
-}
 
 const StyleForm = styled.form`
   width: 100%;
@@ -40,6 +32,24 @@ const StyleForm = styled.form`
   flex-direction: column;
   margin: 0 auto;
   padding: 10px 10px;
+  a {
+    width: 150px;
+    text-align: center;
+    font-size: 14px;
+    
+    cursor: pointer;
+
+    margin: 0 auto;
+    
+  }
+  a:link {
+    color:black;
+    text-decoration: none;
+  }
+  a:visited {
+    color:black;
+    text-decoration: none;
+  }
   div {
     
     display: flex;
