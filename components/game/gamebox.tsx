@@ -153,7 +153,8 @@ export default function GameSection () {
     setFail(false)
   }
 
-  const flag = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const flag = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
     const target = e.currentTarget
     const targetIndex : number = Number(target.dataset.t);
 
@@ -167,11 +168,12 @@ export default function GameSection () {
   let mines;
   if (arr !== undefined) {
       mines = arr.map((item, idx)=> {
-      const index : any = item[0]
-      const status : any = item[1]
-      const mine : any = item[2]
-      const around : any = item[3]
+      const index : number = item[0] as number
+      const status : string = item[1] as string
+      const mine : string = item[2] as string
+      const around : number = item[3] as number
       const flagB : boolean = item[4] as boolean
+
       return (
         <MineBox onClick={boxClick} onContextMenu={flag} status={status} mine={mine} key={idx} data-x={index%10}  data-y={Math.floor(index/10)} data-t={index} around={around} flag={flagB}> {(around !== 0 && status === 'open') && around} {(flagB === true && status === 'closed') && 'F'}</MineBox>
       )
@@ -218,7 +220,7 @@ const GameBox = styled.div`
   grid-template-rows: repeat(10, 1fr);
 `
 
-const MineBox = styled.div<any>`
+const MineBox = styled.div<{status : string, mine : string, around : number, flag : boolean}>`
   border : 1px solid;
 
   background : gray;
