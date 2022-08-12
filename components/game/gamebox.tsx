@@ -17,14 +17,8 @@ export default function GameSection () {
       console.log(a)
       if (tmpArr[a][2] === 'normal') {
         tmpArr[a][2] = 'mine'
-        // if (a % 10 === 0) {
-
-        // } else if (a % 10 === 9) {
-
-        // }
-
         if (tmpArr[a-11]) {
-          if (a%10 > 0) {
+          if (a % 10 !== 0) {
             (tmpArr[a-11][3] as number) += 1;
           }
         }
@@ -32,22 +26,22 @@ export default function GameSection () {
           (tmpArr[a-10][3] as number) += 1;
         }
         if (tmpArr[a-9]) {
-          if (a%10 < 9) {
+          if (a%10 !== 9) {
             (tmpArr[a-9][3] as number) += 1;
           }
         }
         if (tmpArr[a-1]) {
-          if (a % 10 > 0) {
+          if (a % 10 !== 0) {
             (tmpArr[a-1][3] as number) += 1;
           }
         }
         if (tmpArr[a+1]) {
-          if (a % 10 < 9) {
+          if (a % 10 !== 9) {
             (tmpArr[a+1][3] as number) += 1;
           }
         }
         if (tmpArr[a+9]) {
-          if (a % 10 > 0) {
+          if (a % 10 !== 0) {
             (tmpArr[a+9][3] as number) += 1;
           }
         }
@@ -55,7 +49,7 @@ export default function GameSection () {
           (tmpArr[a+10][3] as number) += 1;
         }
         if (tmpArr[a+11]) {
-          if (a % 10 < 9) {
+          if (a % 10 !== 9) {
             (tmpArr[a+11][3] as number) += 1;
           }
         }
@@ -116,28 +110,40 @@ export default function GameSection () {
       if (tmpArr[a][2] === 'normal') {
         tmpArr[a][2] = 'mine'
         if (tmpArr[a-11]) {
-          (tmpArr[a-11][3] as number) += 1;
+          if (a % 10 !== 0) {
+            (tmpArr[a-11][3] as number) += 1;
+          }
         }
         if (tmpArr[a-10]) {
           (tmpArr[a-10][3] as number) += 1;
         }
         if (tmpArr[a-9]) {
-          (tmpArr[a-9][3] as number) += 1;
+          if (a % 10 !== 9) {
+            (tmpArr[a-9][3] as number) += 1;
+          }
         }
         if (tmpArr[a-1]) {
-          (tmpArr[a-1][3] as number) += 1;
+          if (a % 10 !== 0) {
+            (tmpArr[a-1][3] as number) += 1;
+          }
         }
         if (tmpArr[a+1]) {
-          (tmpArr[a+1][3] as number) += 1;
+          if (a % 10 !== 9) {
+            (tmpArr[a+1][3] as number) += 1;
+          }
         }
         if (tmpArr[a+9]) {
-          (tmpArr[a+9][3] as number) += 1;
+          if (a % 10 !== 0) {
+            (tmpArr[a+9][3] as number) += 1;
+          }
         }
         if (tmpArr[a+10]) {
           (tmpArr[a+10][3] as number) += 1;
         }
         if (tmpArr[a+11]) {
-          (tmpArr[a+11][3] as number) += 1;
+          if (a % 10 !== 9) {
+            (tmpArr[a+11][3] as number) += 1;
+          }
         }
         mineCount --
       }
@@ -167,7 +173,7 @@ export default function GameSection () {
       const around : any = item[3]
       const flagB : boolean = item[4] as boolean
       return (
-        <MineBox onClick={boxClick} onContextMenu={flag} status={status} mine={mine} key={idx} data-x={index%10}  data-y={Math.floor(index/10)} data-t={index} around={around} flag={flagB}> </MineBox>
+        <MineBox onClick={boxClick} onContextMenu={flag} status={status} mine={mine} key={idx} data-x={index%10}  data-y={Math.floor(index/10)} data-t={index} around={around} flag={flagB}> {(around !== 0 && status === 'open') && around} {(flagB === true && status === 'closed') && 'F'}</MineBox>
       )
     })
   }
@@ -216,6 +222,7 @@ const MineBox = styled.div<any>`
   border : 1px solid;
 
   background : gray;
+  color : gray;
 
   cursor : pointer;
 
@@ -223,10 +230,11 @@ const MineBox = styled.div<any>`
   ${props => (props.flag === true && props.status === 'closed') && {background : 'yellow'}}
   
   ${props => (props.around === 0 && props.status === 'open' && props.mine === 'normal') && {background : 'blue'}}
-  ${props => (props.around === 1 && props.status === 'open' && props.mine === 'normal') && {background : 'green' }}
-  ${props => (props.around === 2 && props.status === 'open' && props.mine === 'normal') && {background : 'purple' }}
-  ${props => (props.around === 3 && props.status === 'open' && props.mine === 'normal') && {background : 'pink' }}
+  ${props => (props.around === 1 && props.status === 'open' && props.mine === 'normal') && {background : 'blue', color : 'red' }}
+  ${props => (props.around === 2 && props.status === 'open' && props.mine === 'normal') && {background : 'blue', color : 'black' }}
+  ${props => (props.around === 3 && props.status === 'open' && props.mine === 'normal') && {background : 'blue', color : 'pink' }}
   ${props => (props.status === 'open' && props.mine === 'mine') && {background : 'red'}}
+  border-color: gray;
 `
 
 const FailBox = styled.div<{condition : boolean}>`
