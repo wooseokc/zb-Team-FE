@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components';
-import Layout from '../../components/layout';
-import Navbar from '../../components/navbar';
 
 
-function Account() {
+
+export default function Account() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,15 +20,6 @@ function Account() {
       <div><span>닉네임</span><input type='text' required placeholder='닉네임' /></div>
       <div><input type='submit' value='회원가입' /></div>
     </StyleForm>
-  )
-}
-
-Account.getLayout = function getLayout(page) {
-  return (
-    <Layout>
-      <Navbar />
-      {page}
-    </Layout>
   )
 }
 
@@ -79,4 +69,3 @@ const StyleForm = styled.form`
     }
   }
 `;
-export default Account

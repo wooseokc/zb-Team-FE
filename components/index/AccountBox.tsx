@@ -6,10 +6,10 @@ export default function AccountBox () {
 
   return (
     <StyleSection>
-      <Link href="/info/login">
+      <Link href="/info/loginPage">
         <AccountButton>로그인</AccountButton>
       </Link>
-      <Link href="/info/account">
+      <Link href="/info/accountPage">
         <AccountButton>회원가입</AccountButton>
       </Link>
     </StyleSection>
