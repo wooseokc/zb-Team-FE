@@ -28,7 +28,6 @@ const StyleForm = styled.form`
   margin: 0 auto;
   padding: 10px 10px;
   div {
-    
     display: flex;
     align-items: center;
     margin: 10px 0;

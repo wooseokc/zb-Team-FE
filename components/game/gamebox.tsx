@@ -1,71 +1,118 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+interface props {
+  width : number,
+  height : number,
+  mine : number
+}
 
-export default function GameSection () {
-  const [arr, setArr] = useState<(number | string | boolean) [][] >(
-    Array(100).fill(0).map((item, idx) => [idx, 'closed', 'normal', 0, false])
+export default function GameSection (props : props) {
+  const width = props.width;
+  const height = props.height;
+  const howManyMines = props.mine;
+  const total = width * height;
+  const [arr, setArr] = useState<(number | string | boolean)[][] >(
+    Array(total).fill(0).map((item, idx) => [idx, 'closed', 'normal', 0, false])
   );
   const [fail, setFail] = useState(false);
+  const [suc, setSuc] = useState(false);
+  const [postObj, setPostObj] = useState<{
+    gamerId? : number,
+    width? : number,
+    height? : number,
+    numMines? : number
+
+    isOpened? : string[],
+    isMine? : string[],
+    nearbyMines? : number,
+    isFlagged? : boolean,
+
+    timePlayed? : number,
+    isAnon? : boolean,
+    
+    steps? : number[][] 
+  }>({})
 
   // 지뢰 심는 작업
   useEffect(()=> {
-    let tmpArr = arr.slice()
-    let mineCount = 10;
+    let tmpArr = Array(total).fill(0).map((item, idx) => [idx, 'closed', 'normal', 0, false]);
+
+    let mineCount = howManyMines; // 지뢰 개수
+
+    console.log(tmpArr)
+
     while (mineCount > 0) {
-      let a = Math.floor(Math.random()*100)
-      console.log(a)
+      let a = Math.floor(Math.random()*total)  
+
       if (tmpArr[a][2] === 'normal') {
         tmpArr[a][2] = 'mine'
-        if (tmpArr[a-11]) {
-          if (a % 10 !== 0) {
-            (tmpArr[a-11][3] as number) += 1;
+        if (tmpArr[a-width-1]) {
+          if (a % width !== 0) {
+            (tmpArr[a-width-1][3] as number) += 1;
           }
         }
-        if (tmpArr[a-10]) {
-          (tmpArr[a-10][3] as number) += 1;
+        if (tmpArr[a-width]) {
+          (tmpArr[a-width][3] as number) += 1;
         }
-        if (tmpArr[a-9]) {
-          if (a%10 !== 9) {
-            (tmpArr[a-9][3] as number) += 1;
+        if (tmpArr[a-width+1]) {
+          if (a % width !== width-1) {
+            (tmpArr[a-width+1][3] as number) += 1;
           }
         }
         if (tmpArr[a-1]) {
-          if (a % 10 !== 0) {
+          if (a % width !== 0) {
             (tmpArr[a-1][3] as number) += 1;
           }
         }
         if (tmpArr[a+1]) {
-          if (a % 10 !== 9) {
+          if (a % width !== width-1) {
             (tmpArr[a+1][3] as number) += 1;
           }
         }
-        if (tmpArr[a+9]) {
-          if (a % 10 !== 0) {
-            (tmpArr[a+9][3] as number) += 1;
+        if (tmpArr[a+width-1]) {
+          if (a % width !== 0) {
+            (tmpArr[a+width-1][3] as number) += 1;
           }
         }
-        if (tmpArr[a+10]) {
-          (tmpArr[a+10][3] as number) += 1;
+        if (tmpArr[a+width]) {
+          (tmpArr[a+width][3] as number) += 1;
         }
-        if (tmpArr[a+11]) {
-          if (a % 10 !== 9) {
-            (tmpArr[a+11][3] as number) += 1;
+        if (tmpArr[a+width+1]) {
+          if (a % width !== width-1) {
+            (tmpArr[a+width+1][3] as number) += 1;
           }
         }
         mineCount --
       }
     }
     setArr(tmpArr)
-    console.log(arr)
-  } , [])
+
+    tmpArr = [];
+    let openArr : string[] = []
+    let mineArr : string[] = []
+    let aroundArr : number[] = []
+    let flagArr : boolean[] = [];
+    for (let i=0 ; i<arr.length ; i++) {
+      openArr.push(arr[i][1] as string)
+      mineArr.push(arr[i][2] as string)
+      aroundArr.push(arr[i][3] as number)
+      flagArr.push(arr[i][4] as boolean)
+    }
+
+    tmpArr.push(openArr)
+    tmpArr.push(mineArr)
+    tmpArr.push(aroundArr)
+    tmpArr.push(flagArr)
+
+
+  } , [total])
 
   const boxClick = (e: React.MouseEvent<HTMLInputElement>) => {
     const target : HTMLDivElement = e.currentTarget
     const targetIndex : number = Number(target.dataset.t)
 
     let tmpArr = arr.slice() 
-    console.log(tmpArr)
     // tmpArr[targetIndex][1] = 'open'
 
     // 주변 한바퀴 돌리는 함수
@@ -74,17 +121,32 @@ export default function GameSection () {
       if (tmpArr[t][2] === 'mine') return
       if (tmpArr[t][1] === 'open') return
       
-      tmpArr[t][1] = 'open'
+      tmpArr[t][1] = 'open';
       
       if (tmpArr[t][3] !== 0) return
-      around(t-11)
-      around(t-10)
-      around(t-9)
-      around(t-1)
-      around(t+1)
-      around(t+9)
-      around(t+10)
-      around(t+11)
+
+      if (t % width === 0) {
+        around(t-width)
+        around(t-width+1)
+        around(t+1)
+        around(t+width)
+        around(t+width+1)
+      } else if (t % width === width -1 ) {
+        around(t-width-1)
+        around(t-width)
+        around(t-1)
+        around(t+width-1)
+        around(t+width)
+      } else {
+        around(t-width-1)
+        around(t-width)
+        around(t-width+1)
+        around(t-1)
+        around(t+1)
+        around(t+width-1)
+        around(t+width)
+        around(t+width+1)
+      }
     }
 
     // 지뢰를 클릭했을 경우 
@@ -93,62 +155,74 @@ export default function GameSection () {
         if (item[2] === 'mine') {
           item[1] = 'open'
         }
+        return item
       })
       setFail(true)
+
     } else { // 아닐경우
       around(Number(target.dataset.t))
     }
 
+    let openedCount = tmpArr.filter(item => item[1] === 'open').length
+    console.log(openedCount)
+    if (openedCount === total - howManyMines) {
+      console.log('suc')
+      setSuc(true)
+    }
     setArr(tmpArr)
   }
 
   const reTry = (e: React.MouseEvent<HTMLButtonElement>) => {
-    let tmpArr = Array(100).fill(0).map((item, idx) => [idx, 'closed', 'normal', 0, false])
-    let mineCount = 10;
+    let tmpArr = Array(total).fill(0).map((item, idx) => [idx, 'closed', 'normal', 0, false]);
+
+    let mineCount = howManyMines; // 지뢰 개수
+
+    console.log(tmpArr)
+
     while (mineCount > 0) {
-      let a = Math.floor(Math.random()*100)
+      let a = Math.floor(Math.random()*total)  
+
       if (tmpArr[a][2] === 'normal') {
         tmpArr[a][2] = 'mine'
-        if (tmpArr[a-11]) {
-          if (a % 10 !== 0) {
-            (tmpArr[a-11][3] as number) += 1;
+        if (tmpArr[a-width-1]) {
+          if (a % width !== 0) {
+            (tmpArr[a-width-1][3] as number) += 1;
           }
         }
-        if (tmpArr[a-10]) {
-          (tmpArr[a-10][3] as number) += 1;
+        if (tmpArr[a-width]) {
+          (tmpArr[a-width][3] as number) += 1;
         }
-        if (tmpArr[a-9]) {
-          if (a % 10 !== 9) {
-            (tmpArr[a-9][3] as number) += 1;
+        if (tmpArr[a-width+1]) {
+          if (a % width !== width-1) {
+            (tmpArr[a-width+1][3] as number) += 1;
           }
         }
         if (tmpArr[a-1]) {
-          if (a % 10 !== 0) {
+          if (a % width !== 0) {
             (tmpArr[a-1][3] as number) += 1;
           }
         }
         if (tmpArr[a+1]) {
-          if (a % 10 !== 9) {
+          if (a % width !== width-1) {
             (tmpArr[a+1][3] as number) += 1;
           }
         }
-        if (tmpArr[a+9]) {
-          if (a % 10 !== 0) {
-            (tmpArr[a+9][3] as number) += 1;
+        if (tmpArr[a+width-1]) {
+          if (a % width !== 0) {
+            (tmpArr[a+width-1][3] as number) += 1;
           }
         }
-        if (tmpArr[a+10]) {
-          (tmpArr[a+10][3] as number) += 1;
+        if (tmpArr[a+width]) {
+          (tmpArr[a+width][3] as number) += 1;
         }
-        if (tmpArr[a+11]) {
-          if (a % 10 !== 9) {
-            (tmpArr[a+11][3] as number) += 1;
+        if (tmpArr[a+width+1]) {
+          if (a % width !== width-1) {
+            (tmpArr[a+width+1][3] as number) += 1;
           }
         }
         mineCount --
       }
     }
-    console.log(tmpArr)
     setArr(tmpArr)
     setFail(false)
   }
@@ -183,31 +257,36 @@ export default function GameSection () {
 
   return (
     <GameContainer>
-      <GameBox>
-        {arr !== undefined && mines}
-      </GameBox>
+      {width !== undefined && 
+        <GameBox width={width} height={height}>
+          {arr !== undefined && mines}
+        </GameBox>
+      
+      }
       <FailBox condition={fail}> 실패 ~
         <RetryButton onClick={reTry} >다시하기</RetryButton>
       </FailBox>
+      <SucessBox condition={suc}> 성공 ~
+        <RetryButton onClick={reTry} >다시하기</RetryButton>
+      </SucessBox>
 
     </GameContainer>
   )
 }
 
 const GameContainer = styled.section`
-  width : 50%;
-  height : 600px;
+  width : 800px;
+  height : 500px;
   border : 1px solid;
 
   position : relative;
   left : 50%;
   transform: translateX(-50%);
-  top : 30px;
+  top : 100px;
 `
 
-const GameBox = styled.div`
-  width : 350px;
-  height : 350px;
+const GameBox = styled.div<{width : number, height : number}>`
+  ${props => props.width && {width : props.width *25, height : props.height * 25}}
   border : 1px solid;
 
   position : relative;
@@ -216,11 +295,14 @@ const GameBox = styled.div`
   top : 30px;
 
   display : grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(10, 1fr);
+  grid-template-columns: repeat(${props => props.width}, 1fr);
+  grid-template-rows : repeat(${props => props.height}, 1fr);
 `
 
 const MineBox = styled.div<{status : string, mine : string, around : number, flag : boolean}>`
+  width: 25px;
+  height: 25px;
+  box-sizing: border-box;
   border : 1px solid;
 
   background : gray;
@@ -232,11 +314,9 @@ const MineBox = styled.div<{status : string, mine : string, around : number, fla
   ${props => (props.flag === true && props.status === 'closed') && {background : 'yellow'}}
   
   ${props => (props.around === 0 && props.status === 'open' && props.mine === 'normal') && {background : 'blue'}}
-  ${props => (props.around === 1 && props.status === 'open' && props.mine === 'normal') && {background : 'blue', color : 'red' }}
-  ${props => (props.around === 2 && props.status === 'open' && props.mine === 'normal') && {background : 'blue', color : 'black' }}
-  ${props => (props.around === 3 && props.status === 'open' && props.mine === 'normal') && {background : 'blue', color : 'pink' }}
+  ${props => (props.around !== 0 && props.status === 'open' && props.mine === 'normal') && {background : 'blue', color : 'red' }}
   ${props => (props.status === 'open' && props.mine === 'mine') && {background : 'red'}}
-  border-color: gray;
+  border-color: black;
 `
 
 const FailBox = styled.div<{condition : boolean}>`
@@ -252,8 +332,24 @@ const FailBox = styled.div<{condition : boolean}>`
   left : 40px;
 
   ${props => props.condition === false ? {display : 'none'} : {display : 'block'}}
-
 `
+const SucessBox = styled.div<{condition : boolean}>`
+  width :300px;
+  height : 200px;
+  background : black;
+  opacity : 0.8;
+
+  color : white;
+
+  position: absolute;
+  top : 100px;
+  left : 40px;
+
+  ${props => props.condition === false ? {display : 'none'} : {display : 'block'}}
+`
+
+
+
 const RetryButton = styled.button`
   background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer;
   width : 100px;
