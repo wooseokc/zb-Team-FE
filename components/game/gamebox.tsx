@@ -119,6 +119,7 @@ export default function GameSection (props : props) {
       if (tmpArr[t][1] === 'open') return
       if (tmpArr[t][4] === true) return
       tmpArr[t][1] = 'open';
+      tmpArr[t][4] = false;
       if (tmpArr[t][3] !== 0) return
 
       if (t % width === 0) {
@@ -160,6 +161,7 @@ export default function GameSection (props : props) {
         return
       }
       tmpArr[t][1] = 'open';
+      tmpArr[t][4] = false;
       if (tmpArr[t][3] !== 0) return
 
       if (t % width === 0) {
@@ -261,6 +263,7 @@ export default function GameSection (props : props) {
       console.log('suc')
       setSuc(true)
     }
+    console.log(tmpArr)
     setArr(tmpArr)
   }
 
@@ -324,8 +327,10 @@ export default function GameSection (props : props) {
     const targetIndex : number = Number(target.dataset.t);
 
     let tmpArr = arr.slice();
-    if (tmpArr[targetIndex][4] === true)  tmpArr[targetIndex][4] = false
-    else tmpArr[targetIndex][4] = true;
+    if (tmpArr[targetIndex][1] === 'closed') {
+      if (tmpArr[targetIndex][4] === true) tmpArr[targetIndex][4] = false
+      else tmpArr[targetIndex][4] = true;
+    }
 
     setArr(tmpArr)
   }

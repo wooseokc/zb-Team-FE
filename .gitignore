@@ -32,3 +32,5 @@ firebase.json
 out
 
 next.config.js
+
+yarn.lock
