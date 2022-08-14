@@ -7,9 +7,9 @@ export default function Start () {
   return (
     <StartSection>
       <GameModeBox>
-        <Radio type={"radio"} name={'gamemode'} id={'single'}/>
+        <Radio type={"radio"} name={'gamemode'} id={'single'} defaultChecked/>
         <Label htmlFor="single">싱글</Label>
-        <Radio type={"radio"} name={'gamemode'} id={'multi'}/>
+        <Radio type={"radio"} name={'gamemode'} id={'multi'} disabled/>
         <Label htmlFor="multi">멀티</Label>
       </GameModeBox>
       <Link href="/game/single">
