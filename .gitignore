@@ -23,3 +23,12 @@ yarn-debug.log*
 yarn-error.log*
 
 .next
+
+firebase-debug.log
+firebase.json
+.firebaserc
+.firebase
+
+out
+
+next.config.js

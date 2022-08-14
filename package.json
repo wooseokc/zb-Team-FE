@@ -12,6 +12,7 @@
     "@types/react-dom": "^18.0.6",
     "@types/styled-components": "^5.1.25",
     "axios": "^0.27.2",
+    "firebase-tools": "^11.6.0",
     "next": "^12.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -25,7 +26,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "lint": "next lint"
   },
