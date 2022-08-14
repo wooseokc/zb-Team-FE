@@ -37,10 +37,7 @@ export default function GameSection (props : props) {
   // 지뢰 심는 작업
   useEffect(()=> {
     let tmpArr = Array(total).fill(0).map((item, idx) => [idx, 'closed', 'normal', 0, false]);
-
     let mineCount = howManyMines; // 지뢰 개수
-
-    console.log(tmpArr)
 
     while (mineCount > 0) {
       let a = Math.floor(Math.random()*total)  
@@ -120,9 +117,8 @@ export default function GameSection (props : props) {
       if (tmpArr[t] === undefined) return
       if (tmpArr[t][2] === 'mine') return
       if (tmpArr[t][1] === 'open') return
-      
+      if (tmpArr[t][4] === true) return
       tmpArr[t][1] = 'open';
-      
       if (tmpArr[t][3] !== 0) return
 
       if (t % width === 0) {
@@ -148,6 +144,47 @@ export default function GameSection (props : props) {
         around(t+width+1)
       }
     }
+    function aroundMine (t : number) {
+      if (tmpArr[t] === undefined) return
+      if (tmpArr[t][1] === 'open') return
+      if (tmpArr[t][4] === true) return
+      
+      if (tmpArr[t][2] === 'mine') {
+        tmpArr.map((item) => {
+          if (item[2] === 'mine') {
+            item[1] = 'open'
+          }
+          return item
+        })
+        setFail(true)
+        return
+      }
+      tmpArr[t][1] = 'open';
+      if (tmpArr[t][3] !== 0) return
+
+      if (t % width === 0) {
+        aroundMine(t-width)
+        aroundMine(t-width+1)
+        aroundMine(t+1)
+        aroundMine(t+width)
+        aroundMine(t+width+1)
+      } else if (t % width === width -1 ) {
+        aroundMine(t-width-1)
+        aroundMine(t-width)
+        aroundMine(t-1)
+        aroundMine(t+width-1)
+        aroundMine(t+width)
+      } else {
+        aroundMine(t-width-1)
+        aroundMine(t-width)
+        aroundMine(t-width+1)
+        aroundMine(t-1)
+        aroundMine(t+1)
+        aroundMine(t+width-1)
+        aroundMine(t+width)
+        aroundMine(t+width+1)
+      }
+    }
 
     // 지뢰를 클릭했을 경우 
     if (tmpArr[targetIndex][2] === 'mine') {
@@ -160,11 +197,66 @@ export default function GameSection (props : props) {
       setFail(true)
 
     } else { // 아닐경우
-      around(Number(target.dataset.t))
+      if (tmpArr[targetIndex][1] === 'closed') {
+        around(Number(target.dataset.t))
+      } else {
+        let flagCount : number = 0;
+        if (tmpArr[targetIndex-width-1] && tmpArr[targetIndex-width-1][4] === true) {
+          flagCount ++;
+        }
+        if (tmpArr[targetIndex-width] && tmpArr[targetIndex-width][4] === true) {
+          flagCount ++;
+        }
+        if (tmpArr[targetIndex-width+1] && tmpArr[targetIndex-width+1][4] === true) {
+          flagCount ++;
+        }
+        if (tmpArr[targetIndex-1] && tmpArr[targetIndex-1][4] === true) {
+          flagCount ++;
+        }
+        if (tmpArr[targetIndex+1] && tmpArr[targetIndex+1][4] === true) {
+          flagCount ++;
+        }
+        if (tmpArr[targetIndex+width-1] && tmpArr[targetIndex+width-1][4] === true) {
+          flagCount ++;
+        }
+        if (tmpArr[targetIndex+width] && tmpArr[targetIndex+width][4] === true) {
+          flagCount ++;
+        }
+        if (tmpArr[targetIndex+width+1] && tmpArr[targetIndex+width+1][4] === true) {
+          flagCount ++;
+        }
+        console.log(flagCount)
+
+        if (tmpArr[targetIndex][3] === flagCount && tmpArr[targetIndex][3] !== 0) {
+          if (Number(target.dataset.t) % width === 0) {
+            aroundMine(Number(target.dataset.t)-width)
+            aroundMine(Number(target.dataset.t)-width+1)
+            aroundMine(Number(target.dataset.t)+1)
+            aroundMine(Number(target.dataset.t)+width)
+            aroundMine(Number(target.dataset.t)+width+1)
+          } else if (Number(target.dataset.t) % width === width -1) {
+            aroundMine(Number(target.dataset.t)-width-1)
+            aroundMine(Number(target.dataset.t)-width)
+            aroundMine(Number(target.dataset.t)-1)
+            aroundMine(Number(target.dataset.t)+width-1)
+            aroundMine(Number(target.dataset.t)+width)
+          } else {
+            aroundMine(Number(target.dataset.t)-width-1)
+            aroundMine(Number(target.dataset.t)-width)
+            aroundMine(Number(target.dataset.t)-width+1)
+            aroundMine(Number(target.dataset.t)-1)
+            aroundMine(Number(target.dataset.t)+1)
+            aroundMine(Number(target.dataset.t)+width-1)
+            aroundMine(Number(target.dataset.t)+width)
+            aroundMine(Number(target.dataset.t)+width+1)
+          }
+
+          console.log('boom')
+        }
+      }
     }
 
     let openedCount = tmpArr.filter(item => item[1] === 'open').length
-    console.log(openedCount)
     if (openedCount === total - howManyMines) {
       console.log('suc')
       setSuc(true)
@@ -176,8 +268,6 @@ export default function GameSection (props : props) {
     let tmpArr = Array(total).fill(0).map((item, idx) => [idx, 'closed', 'normal', 0, false]);
 
     let mineCount = howManyMines; // 지뢰 개수
-
-    console.log(tmpArr)
 
     while (mineCount > 0) {
       let a = Math.floor(Math.random()*total)  
@@ -250,7 +340,7 @@ export default function GameSection (props : props) {
       const flagB : boolean = item[4] as boolean
 
       return (
-        <MineBox onClick={boxClick} onContextMenu={flag} canClick={suc || fail}  status={status} mine={mine} key={idx} data-x={index%10}  data-y={Math.floor(index/10)} data-t={index} around={around} flag={flagB}> {(around !== 0 && status === 'open') && around} {(flagB === true && status === 'closed') && 'F'}</MineBox>
+        <MineBox onClick={boxClick} onContextMenu={flag} canClick={suc || fail}  status={status} mine={mine} key={idx} data-x={index%10}  data-y={Math.floor(index/10)} data-t={index} around={around} flag={flagB}> {(around !== 0 && status === 'open' && mine === 'normal') && around} {(flagB === true && status === 'closed') && 'F'}</MineBox>
       )
     })
   }
@@ -276,6 +366,12 @@ export default function GameSection (props : props) {
 }
 
 const GameContainer = styled.section`
+  // 드래그 방지
+  -webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+  // 드래그 방지 
   width : 800px;
   height : 500px;
   border : 1px solid;
