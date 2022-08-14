@@ -225,6 +225,7 @@ export default function GameSection (props : props) {
     }
     setArr(tmpArr)
     setFail(false)
+    setSuc(false)
   }
 
   const flag = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -319,6 +320,10 @@ const MineBox = styled.div<{status : string, mine : string, around : number, fla
   ${props => props.canClick === true  && {pointerEvents : 'none'}}
   
   border-color: black;
+
+  :hover {
+    ${props =>( props.status === 'closed' && props.flag === false) && {background : 'black'}}
+  }
 `
 
 const FailBox = styled.div<{condition : boolean}>`
