@@ -249,7 +249,7 @@ export default function GameSection (props : props) {
       const flagB : boolean = item[4] as boolean
 
       return (
-        <MineBox onClick={boxClick} onContextMenu={flag} status={status} mine={mine} key={idx} data-x={index%10}  data-y={Math.floor(index/10)} data-t={index} around={around} flag={flagB}> {(around !== 0 && status === 'open') && around} {(flagB === true && status === 'closed') && 'F'}</MineBox>
+        <MineBox onClick={boxClick} onContextMenu={flag} canClick={suc || fail}  status={status} mine={mine} key={idx} data-x={index%10}  data-y={Math.floor(index/10)} data-t={index} around={around} flag={flagB}> {(around !== 0 && status === 'open') && around} {(flagB === true && status === 'closed') && 'F'}</MineBox>
       )
     })
   }
@@ -299,7 +299,7 @@ const GameBox = styled.div<{width : number, height : number}>`
   grid-template-rows : repeat(${props => props.height}, 1fr);
 `
 
-const MineBox = styled.div<{status : string, mine : string, around : number, flag : boolean}>`
+const MineBox = styled.div<{status : string, mine : string, around : number, flag : boolean, canClick : boolean}>`
   width: 25px;
   height: 25px;
   box-sizing: border-box;
@@ -316,6 +316,8 @@ const MineBox = styled.div<{status : string, mine : string, around : number, fla
   ${props => (props.around === 0 && props.status === 'open' && props.mine === 'normal') && {background : 'blue'}}
   ${props => (props.around !== 0 && props.status === 'open' && props.mine === 'normal') && {background : 'blue', color : 'red' }}
   ${props => (props.status === 'open' && props.mine === 'mine') && {background : 'red'}}
+  ${props => props.canClick === true  && {pointerEvents : 'none'}}
+  
   border-color: black;
 `
 
