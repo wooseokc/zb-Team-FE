@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 export default function Account() {
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   }
   return (

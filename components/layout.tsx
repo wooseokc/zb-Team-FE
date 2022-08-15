@@ -5,7 +5,7 @@ export default function Layout({ children }) {
   return (
     <>
       <Head>
-        <title>Layouts Example</title>
+        <title>지뢰찾기 게임</title>
       </Head>
       <main>{children}</main>
     </>
