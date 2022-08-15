@@ -52,6 +52,7 @@ export default function GameSection (props : props) {
   useEffect(()=> {
     let tmpArr = Array(total).fill(0).map((item, idx) => [idx, 'closed', 'normal', 0, false]);
     let mineCount = howManyMines; // 지뢰 개수
+    setGameStatus(null)
 
     while (mineCount > 0) {
       let a = Math.floor(Math.random()*total)  
@@ -383,6 +384,7 @@ export default function GameSection (props : props) {
   //// 타이머 기능 구현
   function timerSet () {
     const nowTime = new Date();
+
     let nowMilli = nowTime.getMilliseconds()
     let nowSecond = nowTime.getSeconds()
     let nowMin = nowTime.getMinutes()
@@ -397,9 +399,14 @@ export default function GameSection (props : props) {
       nowMilli += 1000;
     }
 
-    if (nowSecond < startMin && nowMin - startMin !== 0) {
+    if (nowSecond < startSecond && nowMin > startMin) {
       nowMin --;
       nowSecond += 60;
+
+      if (nowSecond - startSecond >= 60 ){
+        nowSecond -= 60;
+        nowMin ++;
+      }
     }
 
     setTimer({milli : nowMilli - startMilli, sec : nowSecond - startSecond, min : nowMin - startMin})

@@ -10,9 +10,6 @@ interface selector {
 export default function GameSelector (props: selector) {
   const boxClick = (e: React.MouseEvent<HTMLInputElement>) => {
     const target = e.currentTarget
-
-    console.log(target)
-
     if (target.id === 'medium') {
       props.width(16)
       props.height(16)
