@@ -40,23 +40,28 @@ export default function GameSelector (props: selector) {
         <GameRadio onClick={boxClick} type={'radio'} id='hard' name="game"></GameRadio>
         <RadioLable htmlFor="hard">고급</RadioLable>
       </div>
-      <div>
+      {/* <div>
         <GameRadio type={'radio'} id='custom' name="game"></GameRadio>
         <RadioLable htmlFor="custom">커스텀</RadioLable>
-      </div>
+      </div> */}
     </SelectorBox>
   )
 }
 
 const SelectorBox = styled.section`
-  width: 400px;
+  width: 300px;
   height: 30px;
-  border: 1px solid;
+  border: 3px solid #49add8;
+  border-radius: 10px;
+  
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 3px;
 
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top : 100px;
+  top : 120px;
   
   display: flex;
   justify-content: space-between;

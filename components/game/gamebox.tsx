@@ -20,6 +20,7 @@ export default function GameSection (props : props) {
   const [suc, setSuc] = useState(false);
   const [flagCount, setFlagCount] = useState(0);
   const [gameStatus, setGameStatus] = useState<number | null>(null)
+  const [steps, setSteps] = useState<(number | number [])[][] >([])
   
   const [startTime, setStartTime] = useState({
     milli : 0,
@@ -31,6 +32,7 @@ export default function GameSection (props : props) {
     sec : 0,
     min : 0,
   })
+  const [duration, setDuration] = useState(0);
   const [postObj, setPostObj] = useState<{
     gamerId? : number,
     width? : number,
@@ -39,13 +41,13 @@ export default function GameSection (props : props) {
 
     isOpened? : string[],
     isMine? : string[],
-    nearbyMines? : number,
-    isFlagged? : boolean,
+    nearbyMines? : number[],
+    isFlagged? : boolean[],
 
     timePlayed? : number,
     isAnon? : boolean,
     
-    steps? : number[][] 
+    steps? : (number | number [])[][]
   }>({})
 
   // 지뢰 심는 작업
@@ -99,24 +101,20 @@ export default function GameSection (props : props) {
       }
     }
     setArr(tmpArr)
+    
 
-    tmpArr = [];
     let openArr : string[] = []
     let mineArr : string[] = []
     let aroundArr : number[] = []
     let flagArr : boolean[] = [];
-    for (let i=0 ; i<arr.length ; i++) {
-      openArr.push(arr[i][1] as string)
-      mineArr.push(arr[i][2] as string)
-      aroundArr.push(arr[i][3] as number)
-      flagArr.push(arr[i][4] as boolean)
+    for (let i=0 ; i<tmpArr.length ; i++) {
+      openArr.push(tmpArr[i][1] as string)
+      mineArr.push(tmpArr[i][2] as string)
+      aroundArr.push(tmpArr[i][3] as number)
+      flagArr.push(tmpArr[i][4] as boolean)
     }
 
-    tmpArr.push(openArr)
-    tmpArr.push(mineArr)
-    tmpArr.push(aroundArr)
-    tmpArr.push(flagArr)
-
+    setPostObj({width : width, height : height, numMines : howManyMines, isOpened : openArr, isMine : mineArr, nearbyMines : aroundArr, isFlagged : flagArr, isAnon : true, timePlayed : 0, steps: []})
 
   } , [total])
 
@@ -126,11 +124,27 @@ export default function GameSection (props : props) {
       setStartTime({milli : startDate.getMilliseconds(), sec : startDate.getSeconds(), min : startDate.getMinutes()})
       setGameStatus(37)
     } 
+    if (postObj.isMine === undefined) {
+      let tmpArr= arr.slice()
+      let openArr : string[] = []
+      let mineArr : string[] = []
+      let aroundArr : number[] = []
+      let flagArr : boolean[] = [];
+      for (let i=0 ; i<tmpArr.length ; i++) {
+        openArr.push(tmpArr[i][1] as string)
+        mineArr.push(tmpArr[i][2] as string)
+        aroundArr.push(tmpArr[i][3] as number)
+        flagArr.push(tmpArr[i][4] as boolean)
+      }
+
+      setPostObj({width : width, height : height, numMines : howManyMines, isOpened : openArr, isMine : mineArr, nearbyMines : aroundArr, isFlagged : flagArr, isAnon : true, timePlayed : 0})
+    }
     const target : HTMLDivElement = e.currentTarget
     const targetIndex : number = Number(target.dataset.t)
 
     let tmpArr = arr.slice() 
-    // tmpArr[targetIndex][1] = 'open'
+    let tmpStep = [1, targetIndex ,[]];
+    let tmpStepArr =  tmpStep[2] as number[]
 
     // 주변 한바퀴 돌리는 함수
     function around (t : number) {
@@ -140,6 +154,8 @@ export default function GameSection (props : props) {
       if (tmpArr[t][4] === true) return
       tmpArr[t][1] = 'open';
       tmpArr[t][4] = false;
+      tmpStepArr.push(t)
+
       if (tmpArr[t][3] !== 0) return
 
       if (t % width === 0) {
@@ -182,6 +198,7 @@ export default function GameSection (props : props) {
         return
       }
       tmpArr[t][1] = 'open';
+      tmpStepArr.push(t)
       tmpArr[t][4] = false;
       if (tmpArr[t][3] !== 0) return
 
@@ -249,7 +266,6 @@ export default function GameSection (props : props) {
         if (tmpArr[targetIndex+width+1] && tmpArr[targetIndex+width+1][4] === true) {
           flagCount ++;
         }
-        console.log(flagCount)
 
         if (tmpArr[targetIndex][3] === flagCount && tmpArr[targetIndex][3] !== 0) {
           if (Number(target.dataset.t) % width === 0) {
@@ -275,18 +291,20 @@ export default function GameSection (props : props) {
             aroundMine(Number(target.dataset.t)+width+1)
           }
 
-          console.log('boom')
         }
       }
     }
 
     let openedCount = tmpArr.filter(item => item[1] === 'open').length
     if (openedCount === total - howManyMines) {
-      console.log('suc')
       setSuc(true)
       setGameStatus(null);
     }
     setArr(tmpArr)
+    if (tmpStepArr.length !== 0) {
+      setSteps([...steps, tmpStep])
+    }
+    // setSteps(newStep)
   }
 
   const reTry = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -339,11 +357,28 @@ export default function GameSection (props : props) {
         mineCount --
       }
     }
+    if (suc) {
+      console.log(JSON.stringify(postObj))
+    }
+
+    let openArr : string[] = []
+    let mineArr : string[] = []
+    let aroundArr : number[] = []
+    let flagArr : boolean[] = [];
+    for (let i=0 ; i<tmpArr.length ; i++) {
+      openArr.push(tmpArr[i][1] as string)
+      mineArr.push(tmpArr[i][2] as string)
+      aroundArr.push(tmpArr[i][3] as number)
+      flagArr.push(tmpArr[i][4] as boolean)
+    }
+    setPostObj({width : width, height : height, numMines : howManyMines, isOpened : openArr, isMine : mineArr, nearbyMines : aroundArr, isFlagged : flagArr, isAnon : true, timePlayed : 0})
     setArr(tmpArr)
     setFail(false)
     setSuc(false)
     setFlagCount(0)
     setGameStatus(null)
+    setSteps([])
+    
   }
 
   const flag = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -351,8 +386,11 @@ export default function GameSection (props : props) {
     const target = e.currentTarget
     const targetIndex : number = Number(target.dataset.t);
 
+    let tmpStep = [2, targetIndex, [targetIndex]];
+
     let tmpArr = arr.slice();
     if (tmpArr[targetIndex][1] === 'closed') {
+      setSteps([...steps, tmpStep])
       if (tmpArr[targetIndex][4] === true) {
         tmpArr[targetIndex][4] = false
         setFlagCount(c => c - 1);
@@ -408,11 +446,21 @@ export default function GameSection (props : props) {
         nowMin ++;
       }
     }
-
     setTimer({milli : nowMilli - startMilli, sec : nowSecond - startSecond, min : nowMin - startMin})
+    let dur = (nowMilli - startMilli) + (nowSecond-startSecond)*1000 + (nowMin - startMin) * 1000 * 60;
+    setDuration(dur)
+    setPostObj({...postObj, timePlayed : dur})
   };
 
   useInterval(timerSet, gameStatus)
+
+  /// 성공 데이터 전송
+
+  useEffect(() => {
+    setPostObj({...postObj, steps : steps})
+  }, [suc])
+
+
 
   return (
     <GameContainer>
@@ -447,7 +495,6 @@ const GameContainer = styled.section`
   // 드래그 방지 
   width : 800px;
   height : 500px;
-  border : 1px solid;
 
   position : relative;
   left : 50%;
@@ -480,6 +527,10 @@ const GameInfoItem = styled.div`
 const GameBox = styled.div<{width : number, height : number}>`
   ${props => props.width && {width : props.width *25, height : props.height * 25}}
   border : 1px solid;
+  border-radius: 10px;
+  background-color: #49add8;
+
+  padding: 5px;
 
   position : relative;
   left : 50%;
@@ -497,23 +548,25 @@ const MineBox = styled.div<{status : string, mine : string, around : number, fla
   box-sizing: border-box;
   border : 1px solid;
 
-  background : gray;
-  color : gray;
+  background : #49add8;
+  color : #464646;
+  font-weight: bold;
+
+  text-align: center;
 
   cursor : pointer;
 
 
   ${props => (props.flag === true && props.status === 'closed') && {background : 'yellow'}}
-  
-  ${props => (props.around === 0 && props.status === 'open' && props.mine === 'normal') && {background : 'blue'}}
-  ${props => (props.around !== 0 && props.status === 'open' && props.mine === 'normal') && {background : 'blue', color : 'red' }}
-  ${props => (props.status === 'open' && props.mine === 'mine') && {background : 'red'}}
+  ${props => (props.around === 0 && props.status === 'open' && props.mine === 'normal') && {background : '#CCCCFF'}}
+  ${props => (props.around !== 0 && props.status === 'open' && props.mine === 'normal') && {background : '#CCCCFF', color : '#464646' }}
+  ${props => (props.status === 'open' && props.mine === 'mine') && {background : '#FF0066'}}
   ${props => props.canClick === true  && {pointerEvents : 'none'}}
   
-  border-color: black;
+  border-color: #464646;
 
   :hover {
-    ${props =>( props.status === 'closed' && props.flag === false) && {background : 'black'}}
+    ${props =>( props.status === 'closed' && props.flag === false) && {background : '#464646'}}
   }
 `
 
@@ -523,13 +576,18 @@ const FailBox = styled.div<{condition : boolean}>`
   background : black;
   opacity : 0.8;
 
+  font-size: 30px;
   color : white;
 
   position: absolute;
   top : 100px;
-  left : 40px;
+  left : 50%;
+  transform: translateX(-50%);
 
   ${props => props.condition === false ? {display : 'none'} : {display : 'block'}}
+
+  text-align: center;
+  align-items: center;
 `
 const SucessBox = styled.div<{condition : boolean}>`
   width :300px;
@@ -537,21 +595,35 @@ const SucessBox = styled.div<{condition : boolean}>`
   background : black;
   opacity : 0.8;
 
+  font-size: 30px;
   color : white;
 
   position: absolute;
   top : 100px;
-  left : 40px;
+  left : 50%;
+  transform: translateX(-50%);
 
   ${props => props.condition === false ? {display : 'none'} : {display : 'block'}}
+
+  text-align: center;
+  align-items: center;
 `
 
 
 
 const RetryButton = styled.button`
   background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer;
+
   width : 100px;
   height : 30px;
-  background : blue;
+  background : #66FFFF;
 
+  color: #000033;
+  font-size: 15px;
+  font-weight: bolder;
+  
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20%;
 `
