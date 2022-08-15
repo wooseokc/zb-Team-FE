@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import useInterval from "../hooks/useInterval";
 
 interface props {
   width : number,
@@ -17,6 +18,19 @@ export default function GameSection (props : props) {
   );
   const [fail, setFail] = useState(false);
   const [suc, setSuc] = useState(false);
+  const [flagCount, setFlagCount] = useState(0);
+  const [gameStatus, setGameStatus] = useState<number | null>(null)
+  
+  const [startTime, setStartTime] = useState({
+    milli : 0,
+    sec : 0,
+    min : 0,
+  })
+  const [timer, setTimer] = useState({
+    milli : 0,
+    sec : 0,
+    min : 0,
+  })
   const [postObj, setPostObj] = useState<{
     gamerId? : number,
     width? : number,
@@ -106,6 +120,11 @@ export default function GameSection (props : props) {
   } , [total])
 
   const boxClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    if (gameStatus === null) {
+      const startDate = new Date();
+      setStartTime({milli : startDate.getMilliseconds(), sec : startDate.getSeconds(), min : startDate.getMinutes()})
+      setGameStatus(37)
+    } 
     const target : HTMLDivElement = e.currentTarget
     const targetIndex : number = Number(target.dataset.t)
 
@@ -158,6 +177,7 @@ export default function GameSection (props : props) {
           return item
         })
         setFail(true)
+        setGameStatus(null)
         return
       }
       tmpArr[t][1] = 'open';
@@ -197,6 +217,7 @@ export default function GameSection (props : props) {
         return item
       })
       setFail(true)
+      setGameStatus(null)
 
     } else { // 아닐경우
       if (tmpArr[targetIndex][1] === 'closed') {
@@ -262,14 +283,15 @@ export default function GameSection (props : props) {
     if (openedCount === total - howManyMines) {
       console.log('suc')
       setSuc(true)
+      setGameStatus(null);
     }
-    console.log(tmpArr)
     setArr(tmpArr)
   }
 
   const reTry = (e: React.MouseEvent<HTMLButtonElement>) => {
     let tmpArr = Array(total).fill(0).map((item, idx) => [idx, 'closed', 'normal', 0, false]);
-
+    setTimer({milli : 0, sec : 0, min : 0})
+    setGameStatus(null)
     let mineCount = howManyMines; // 지뢰 개수
 
     while (mineCount > 0) {
@@ -319,6 +341,8 @@ export default function GameSection (props : props) {
     setArr(tmpArr)
     setFail(false)
     setSuc(false)
+    setFlagCount(0)
+    setGameStatus(null)
   }
 
   const flag = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -328,8 +352,14 @@ export default function GameSection (props : props) {
 
     let tmpArr = arr.slice();
     if (tmpArr[targetIndex][1] === 'closed') {
-      if (tmpArr[targetIndex][4] === true) tmpArr[targetIndex][4] = false
-      else tmpArr[targetIndex][4] = true;
+      if (tmpArr[targetIndex][4] === true) {
+        tmpArr[targetIndex][4] = false
+        setFlagCount(c => c - 1);
+      }
+      else {
+        tmpArr[targetIndex][4] = true;
+        setFlagCount(c => c + 1);
+      }
     }
 
     setArr(tmpArr)
@@ -350,9 +380,40 @@ export default function GameSection (props : props) {
     })
   }
 
+  //// 타이머 기능 구현
+  function timerSet () {
+    const nowTime = new Date();
+    let nowMilli = nowTime.getMilliseconds()
+    let nowSecond = nowTime.getSeconds()
+    let nowMin = nowTime.getMinutes()
+
+    let startMilli = startTime.milli
+    let startSecond = startTime.sec
+    let startMin = startTime.min
+
+
+    if (nowMilli < startMilli) {
+      nowSecond --;
+      nowMilli += 1000;
+    }
+
+    if (nowSecond < startMin && nowMin - startMin !== 0) {
+      nowMin --;
+      nowSecond += 60;
+    }
+
+    setTimer({milli : nowMilli - startMilli, sec : nowSecond - startSecond, min : nowMin - startMin})
+  };
+
+  useInterval(timerSet, gameStatus)
 
   return (
     <GameContainer>
+      <GameInfoBox>
+        <GameInfoItem>지뢰 : {howManyMines}</GameInfoItem>
+        <GameInfoItem>Flag : {flagCount}</GameInfoItem>
+        <GameInfoItem>time : {(suc || fail || gameStatus !== null)  ? `${timer.min}:${timer.sec}:${Math.floor(timer.milli / 10)}` : '0:00:00'}</GameInfoItem>
+      </GameInfoBox>
       {width !== undefined && 
         <GameBox width={width} height={height}>
           {arr !== undefined && mines}
@@ -387,6 +448,28 @@ const GameContainer = styled.section`
   top : 100px;
 `
 
+const GameInfoBox = styled.div`
+  width: 350px;
+  height: 50px;
+
+  position : relative;
+  left : 50%;
+  transform: translateX(-50%);
+  top : 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+`
+
+const GameInfoItem = styled.div`
+  width: 80px;
+  height: 30px;
+
+  text-align: center;
+  white-space: nowrap;
+`
+
 const GameBox = styled.div<{width : number, height : number}>`
   ${props => props.width && {width : props.width *25, height : props.height * 25}}
   border : 1px solid;
@@ -394,7 +477,7 @@ const GameBox = styled.div<{width : number, height : number}>`
   position : relative;
   left : 50%;
   transform: translateX(-50%);
-  top : 30px;
+  top : 20px;
 
   display : grid;
   grid-template-columns: repeat(${props => props.width}, 1fr);
