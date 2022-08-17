@@ -39,15 +39,13 @@ export default function GameSection (props : props) {
     height? : number,
     numMines? : number
 
-    isOpened? : string[],
     isMine? : string[],
     nearbyMines? : number[],
-    isFlagged? : boolean[],
 
     timePlayed? : number,
     isAnon? : boolean,
     
-    steps? : (number | number [])[][]
+    steps? : string
   }>({})
 
   // 지뢰 심는 작업
@@ -114,7 +112,7 @@ export default function GameSection (props : props) {
       flagArr.push(tmpArr[i][4] as boolean)
     }
 
-    setPostObj({width : width, height : height, numMines : howManyMines, isOpened : openArr, isMine : mineArr, nearbyMines : aroundArr, isFlagged : flagArr, isAnon : true, timePlayed : 0, steps: []})
+    setPostObj({gamerId: 1234, width : width, height : height, numMines : howManyMines,  isMine : mineArr, nearbyMines : aroundArr, isAnon : true, timePlayed : 0, steps: ''})
 
   } , [total])
 
@@ -137,7 +135,7 @@ export default function GameSection (props : props) {
         flagArr.push(tmpArr[i][4] as boolean)
       }
 
-      setPostObj({width : width, height : height, numMines : howManyMines, isOpened : openArr, isMine : mineArr, nearbyMines : aroundArr, isFlagged : flagArr, isAnon : true, timePlayed : 0})
+      setPostObj({gamerId : 1234, width : width, height : height, numMines : howManyMines, isMine : mineArr, nearbyMines : aroundArr, isAnon : true, timePlayed : 0})
     }
     const target : HTMLDivElement = e.currentTarget
     const targetIndex : number = Number(target.dataset.t)
@@ -371,7 +369,7 @@ export default function GameSection (props : props) {
       aroundArr.push(tmpArr[i][3] as number)
       flagArr.push(tmpArr[i][4] as boolean)
     }
-    setPostObj({width : width, height : height, numMines : howManyMines, isOpened : openArr, isMine : mineArr, nearbyMines : aroundArr, isFlagged : flagArr, isAnon : true, timePlayed : 0})
+    setPostObj({width : width, height : height, numMines : howManyMines,  isMine : mineArr, nearbyMines : aroundArr, isAnon : true, timePlayed : 0})
     setArr(tmpArr)
     setFail(false)
     setSuc(false)
@@ -457,7 +455,7 @@ export default function GameSection (props : props) {
   /// 성공 데이터 전송
 
   useEffect(() => {
-    setPostObj({...postObj, steps : steps})
+    setPostObj({...postObj, steps : JSON.stringify(steps)})
   }, [suc])
 
 
