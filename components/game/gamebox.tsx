@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import useInterval from "../hooks/useInterval";
@@ -32,9 +34,8 @@ export default function GameSection (props : props) {
     sec : 0,
     min : 0,
   })
-  const [duration, setDuration] = useState(0);
   const [postObj, setPostObj] = useState<{
-    gamerId? : number,
+    gamerId : number,
     width? : number,
     height? : number,
     numMines? : number
@@ -46,13 +47,17 @@ export default function GameSection (props : props) {
     isAnon? : boolean,
     
     steps? : string
-  }>({})
+  }>({gamerId : 0})
 
   // 지뢰 심는 작업
   useEffect(()=> {
     let tmpArr = Array(total).fill(0).map((item, idx) => [idx, 'closed', 'normal', 0, false]);
     let mineCount = howManyMines; // 지뢰 개수
     setGameStatus(null)
+
+    if (sessionStorage.getItem('gamerId')) {
+      console.log(sessionStorage.getItem('gamerId'))
+    }
 
     while (mineCount > 0) {
       let a = Math.floor(Math.random()*total)  
@@ -112,7 +117,7 @@ export default function GameSection (props : props) {
       flagArr.push(tmpArr[i][4] as boolean)
     }
 
-    setPostObj({gamerId: 1234, width : width, height : height, numMines : howManyMines,  isMine : mineArr, nearbyMines : aroundArr, isAnon : true, timePlayed : 0, steps: ''})
+    setPostObj({gamerId: Number(sessionStorage.getItem('gamerId')), width : width, height : height, numMines : howManyMines,  isMine : mineArr, nearbyMines : aroundArr, isAnon : true, timePlayed : 0, steps: ''})
 
   } , [total])
 
@@ -134,8 +139,9 @@ export default function GameSection (props : props) {
         aroundArr.push(tmpArr[i][3] as number)
         flagArr.push(tmpArr[i][4] as boolean)
       }
-
-      setPostObj({gamerId : 1234, width : width, height : height, numMines : howManyMines, isMine : mineArr, nearbyMines : aroundArr, isAnon : true, timePlayed : 0})
+  
+      setPostObj({gamerId : Number(sessionStorage.getItem('gamerId')), width : width, height : height, numMines : howManyMines, isMine : mineArr, nearbyMines : aroundArr, isAnon : true, timePlayed : 0})
+      
     }
     const target : HTMLDivElement = e.currentTarget
     const targetIndex : number = Number(target.dataset.t)
@@ -355,8 +361,22 @@ export default function GameSection (props : props) {
         mineCount --
       }
     }
+
+    async function resultPost () {
+      await axios.post('http://34.168.232.38:8080/minesweeper/game', postObj).then(res => {
+        console.log(res)
+        let gamerResId : number = res.data.gamerId;
+        console.log(gamerResId)
+        if (postObj.gamerId !== gamerResId) {
+          sessionStorage.setItem('gamerId', String(gamerResId))
+          setPostObj({...postObj, gamerId : gamerResId})
+        }
+      })
+    }
+
     if (suc) {
       console.log(JSON.stringify(postObj))
+      resultPost()
     }
 
     let openArr : string[] = []
@@ -369,7 +389,7 @@ export default function GameSection (props : props) {
       aroundArr.push(tmpArr[i][3] as number)
       flagArr.push(tmpArr[i][4] as boolean)
     }
-    setPostObj({width : width, height : height, numMines : howManyMines,  isMine : mineArr, nearbyMines : aroundArr, isAnon : true, timePlayed : 0})
+    setPostObj({gamerId : 0})
     setArr(tmpArr)
     setFail(false)
     setSuc(false)
@@ -446,7 +466,6 @@ export default function GameSection (props : props) {
     }
     setTimer({milli : nowMilli - startMilli, sec : nowSecond - startSecond, min : nowMin - startMin})
     let dur = (nowMilli - startMilli) + (nowSecond-startSecond)*1000 + (nowMin - startMin) * 1000 * 60;
-    setDuration(dur)
     setPostObj({...postObj, timePlayed : dur})
   };
 
