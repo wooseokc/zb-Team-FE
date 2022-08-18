@@ -8,6 +8,9 @@ export default function MyPage () {
   const onSubmit = async (e: React.MouseEvent<HTMLDivElement>) => {
     
     console.log(sessionStorage.getItem('gamerId'))
+    console.log(localStorage.getItem('accessToken'))
+    console.log(localStorage.getItem('refreshToken'))
+    console.log(localStorage)
   }
 
   const onSubmit2 = async (e: React.MouseEvent<HTMLButtonElement>) => {

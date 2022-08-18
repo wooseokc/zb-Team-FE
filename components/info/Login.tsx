@@ -27,12 +27,16 @@ export default function Login() {
         await axios
           .post('http://34.168.232.38:8080/minesweeper/auth/login', loginPayload)
           .then((response) => {
-            const token = response.data.token;
+            const data = response.data;
 
+            localStorage.setItem('accessToken', data.accessToken)
+            localStorage.setItem('refreshToken', data.refreshToken)
+            sessionStorage.setItem('gamerId', String(data.gamerId))
+
+            console.log(response.data.gamerId)
             // JWT 토큰 로컬에 저장
-            localStorage.setItem('token', token);
 
-            setAuthToken(token);
+            setAuthToken(data.accessToken);
 
             window.location.href = '/';
           })

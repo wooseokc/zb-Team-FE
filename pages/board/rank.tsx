@@ -2,7 +2,7 @@ import React from "react";
 import Layout from "../../components/layout";
 import Navbar from "../../components/navbar";
 
-export default function login () {
+export default function Rank () {
 
   return (
     <div>
@@ -11,12 +11,11 @@ export default function login () {
   )
 }
 
-login.getLayout = function getLayout(page) {
+Rank.getLayout = function getLayout(page) {
   return (
     <Layout>
       <Navbar />
       {page}
-      sdfsdf
     </Layout>
   )
 }

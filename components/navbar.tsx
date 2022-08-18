@@ -1,9 +1,46 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Link from 'next/link'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import axios from 'axios'
+import { setAuthToken } from './info/_helpers/setAuthToken'
 
 export default function Navbar() {
+  const [tokenIs, setTokenIs] = useState<boolean>(false) 
+
+  useEffect(() => {
+    let token: string | null = null
+    if (localStorage.getItem('accessToken')) {
+      setTokenIs(true)
+      token = localStorage.getItem('accessToken');
+    } else {
+      setTokenIs(false)
+    }
+    if (token !== null) {
+      setAuthToken(token)
+    }
+  })
+
+
+  const logOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const data = {
+      "accessToken": localStorage.getItem('accessToken'),
+      "refreshToken": localStorage.getItem('refreshToken')
+    }
+    console.log(JSON.stringify(data))
+    await axios.post('http://34.168.232.38:8080/minesweeper/auth/logout', JSON.stringify(data), {
+      headers : {'content-type': 'application/json'},
+    }).then((res)=> {
+      console.log(res)
+      localStorage.clear()
+      sessionStorage.clear()
+      window.location.href = '/';
+    })
+  }
+
+
+
   return (
     <>
     <NavBox>
@@ -23,11 +60,11 @@ export default function Navbar() {
           <NavButton>마이페이지</NavButton>
         </Link>
       </NavListBox>
+      {tokenIs ? <LogOutButton onClick={logOut}> Log out</LogOutButton> : 
       <Link href="/info/loginPage">
         <LoginButton>Log in</LoginButton>
-      </Link>
+      </Link> }
     </NavBox>
-    
     </>
   )
 }
@@ -76,6 +113,28 @@ const NavButton = styled.button<{char? : string}>`
 `
 
 const LoginButton = styled.button`
+  background: inherit ; box-shadow:none; padding:0; overflow:visible; cursor:pointer;
+
+  width : 60px;
+  height : 30px;
+
+  border : 0;
+  border-radius: 6px;
+  outline: 0;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  
+  background-color: #49add8;
+
+  &:hover {
+    background-color: #464646;
+    color: white;
+    transition: 0.6s;
+  }
+`
+
+const LogOutButton = styled.button`
   background: inherit ; box-shadow:none; padding:0; overflow:visible; cursor:pointer;
 
   width : 60px;
