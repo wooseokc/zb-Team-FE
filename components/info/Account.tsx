@@ -1,24 +1,80 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useState } from 'react'
 import styled from 'styled-components';
 
 
 
 export default function Account() {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [nickName, setNickName] = useState<string>('');
+  const [emailResult, setEmailResult] =useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //email 인증 이벤트
+  const emailAuthentication = async () => {
+    // console.log(email);
+    const regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    if (email.length < 5 || !regExp.test(email)) {
+      setError('email을 확인 해주세요.');
+    } else {
+      const response = await axios.get(`http://34.168.232.38:8080/minesweeper/gamer/email/${email}`) 
+      if (response.data) {
+        setEmailResult(prev => !prev);
+      }
+      console.log(response.data);
+    }
+  }
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const infoData = {
+      email,
+      name: nickName,
+      password,
+    };
+    const respone = await axios.post(`http://34.168.232.38:8080/minesweeper/gamer/`, infoData)
+    console.log(respone);
+  }
+
+  //email 정보 저장 이벤트
+  const inputData = (e: React.FormEvent<HTMLInputElement>) => {
+    const { currentTarget: { type, value, name } } = e;
+    
+    if (type === 'email') {
+      setEmail(value);
+    } else if (type === 'password') {
+      setPassword(value);
+    } else if (name === 'nickName') {
+      setNickName(value);
+    }
   }
   return (
     <StyleForm onSubmit={onSubmit}>
-      <div>
-        <span>ID</span>
-        <input type='email' required placeholder='Email을 입력해주세요' />
-        <input className='emailBtn' type='button' value='이메일인증' />
-      </div>
-      <div><span>인증번호</span><input type='text' required /></div>
-      <div><span>패스워드</span><input type='password' required placeholder='비밀번호를 입력해주세요' /></div>
-      <div><span>닉네임</span><input type='text' required placeholder='닉네임' /></div>
-      <div><input type='submit' value='회원가입' /></div>
+      <AccountDivBox>
+        <AccountTextBox>ID</AccountTextBox>
+        {!emailResult
+          ? <StyledInput type='email' required placeholder='Email을 입력해주세요' onChange={inputData} />
+          : <ReadOnlyInput type='email' required value={email} onChange={inputData} readOnly />
+        }
+        <StyledInput className='emailBtn' type='button' value='중복확인' onClick={emailAuthentication} />
+      </AccountDivBox>
+      {error && <ErrorSpan className='authError'>{error}</ErrorSpan>}
+      <AccountDivBox>
+        <AccountTextBox>패스워드</AccountTextBox>
+        <StyledInput type='password' value={password} required placeholder='비밀번호를 입력해주세요' onChange={inputData} />
+      </AccountDivBox>
+      <AccountDivBox>
+        <AccountTextBox>닉네임</AccountTextBox>
+        <StyledInput type='text' name='nickName' required placeholder='닉네임을 입력해주세요' onChange={inputData}/>
+      </AccountDivBox>
+      <AccountDivBox>
+        {!emailResult
+          ? <StyledSubmit type='submit' disabled value='회원가입' />
+          : <StyledSubmit type='submit' value='회원가입' />
+        }
+      </AccountDivBox>
     </StyleForm>
   )
 }
@@ -27,7 +83,8 @@ const StyleForm = styled.form`
   width: 100%;
   max-width: 400px;
   
-  border: 1px solid black;
+  border: 2px solid #e6e6e6;
+  border-radius: 10px;
 
   position: relative;
   top: 100px;
@@ -35,37 +92,57 @@ const StyleForm = styled.form`
   flex-direction: column;
   margin: 0 auto;
   padding: 10px 10px;
-  div {
+
+`;
+const AccountDivBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  .emailBtn {
+    width: 80px;
+    cursor: pointer;
+
+    margin-left: 10px;
+  }
+`;
+
+const AccountTextBox = styled.span`
+  width: 100px;
+
+  display: inline-block;
+`;
+
+const StyledInput = styled.input`
+  width: 200px;
+  height: 25px;
+  box-sizing: border-box;
     
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
-    .emailBtn {
-      cursor: pointer;
+  padding: 0;
+`;
+const ReadOnlyInput = styled.input`
+  width: 200px;
+  height: 25px;
+  box-sizing: border-box;
 
-      margin-left: 10px;
-    }
-  }
-
-  span {
-    width: 100px;
-
-    display: inline-block;
-  }
-  input {
-    height: 25px;
-    box-sizing: border-box;
+  background-color: #e6e6e6;
     
-    padding: 0;
-  }
-  div:nth-child(5) {
-    width: 150px;
+  padding: 0;
+`;
 
-    margin: 0 auto;
-    input { 
-      width: 100%;
+const StyledSubmit = styled.input`
+  width: 200px;
+  height: 25px;
+  box-sizing: border-box;
+    
+  padding: 0;
+  margin: 0 auto;
+`;
 
-      cursor: pointer;
-    }
-  }
+const ErrorSpan = styled.span`
+  color: tomato;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+
+
 `;

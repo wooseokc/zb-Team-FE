@@ -20,23 +20,23 @@ export default function Login() {
     } else {
       try {
         const loginPayload = {
-        email: loginId,
-        password: loginPw,
-      };
+        'email': loginId,
+        'password': loginPw,
+        };
 
-      await axios
-        .post('http://34.168.232.38:8080/minesweeper/login', loginPayload)
-        .then((response) => {
-          const token = response.data.token;
+        await axios
+          .post('http://34.168.232.38:8080/minesweeper/auth/login', loginPayload)
+          .then((response) => {
+            const token = response.data.token;
 
-          // JWT 토큰 로컬에 저장
-          localStorage.setItem('token', token);
+            // JWT 토큰 로컬에 저장
+            localStorage.setItem('token', token);
 
-          setAuthToken(token);
+            setAuthToken(token);
 
-          window.location.href = '/';
-        })
-      }catch(error) {
+            window.location.href = '/';
+          })
+      } catch(error) {
         setError('ID와 PASSWORD를 확인 해주세요');
       }
       
