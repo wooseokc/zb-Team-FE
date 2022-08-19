@@ -29,7 +29,7 @@ export default function Navbar() {
       "refreshToken": localStorage.getItem('refreshToken')
     }
     console.log(JSON.stringify(data))
-    await axios.post('http://34.168.232.38:8080/minesweeper/auth/logout', JSON.stringify(data), {
+    await axios.post('https://minesweeper.hanjoon.dev/minesweeper/auth/logout', JSON.stringify(data), {
       headers : {'content-type': 'application/json'},
     }).then((res)=> {
       console.log(res)

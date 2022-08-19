@@ -25,7 +25,7 @@ export default function Login() {
         };
 
         await axios
-          .post('http://34.168.232.38:8080/minesweeper/auth/login', loginPayload)
+          .post('https://minesweeper.hanjoon.dev/minesweeper/auth/login', loginPayload)
           .then((response) => {
             const data = response.data;
 

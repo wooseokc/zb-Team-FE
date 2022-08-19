@@ -19,7 +19,7 @@ export default function Account() {
     if (email.length < 5 || !regExp.test(email)) {
       setError('email을 확인 해주세요.');
     } else {
-      const response = await axios.get(`http://34.168.232.38:8080/minesweeper/gamer/email/${email}`) 
+      const response = await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/gamer/email/${email}`) 
       if (response.data) {
         setEmailResult(prev => !prev);
       }
@@ -34,7 +34,7 @@ export default function Account() {
       name: nickName,
       password,
     };
-    const respone = await axios.post(`http://34.168.232.38:8080/minesweeper/gamer/`, infoData)
+    const respone = await axios.post(`https://minesweeper.hanjoon.dev/minesweeper/gamer/`, infoData)
     console.log(respone);
   }
 

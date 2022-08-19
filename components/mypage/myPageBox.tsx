@@ -15,7 +15,7 @@ export default function MyPage () {
 
   const onSubmit2 = async (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log('wait')
-    await axios.get('http://34.168.232.38:8080/minesweeper/gamer/email/abcd@naver.com').then(res => {
+    await axios.get('https://minesweeper.hanjoon.dev/minesweeper/gamer/email/abcd@naver.com').then(res => {
      
       console.log(res.data)
    
@@ -29,13 +29,18 @@ export default function MyPage () {
       name : '홍길동',
       password : '1234'
     }
-    await axios.post(`http://34.168.232.38:8080/minesweeper/gamer/`, data).then(res => {
+    await axios.post(`https://minesweeper.hanjoon.dev/minesweeper/gamer`, data).then(res => {
      
       console.log(res.data)
    
     }).catch(() => {
       console.log('err')
     })
+  }
+
+  const clearStore = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    localStorage.clear()
+    sessionStorage.clear()
   }
 
   return (
@@ -47,6 +52,8 @@ export default function MyPage () {
         나의 업적 등등
         <button onClick={onSubmit2}>get</button>
         <button onClick={onPost}>post</button>
+        <button onClick={clearStore}>clear</button>
+
       </MyPageItem>
 
 
