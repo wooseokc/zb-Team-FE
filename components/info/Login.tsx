@@ -15,7 +15,7 @@ export default function Login() {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // console.log(loginId.length);
-    if (loginId.length < 5 || !regExp.test(loginId)) {
+    if (loginId.length < 5 || !regExp.test(loginId)) { 
       setError('ID를 확인 해주세요.')
     } else {
       try {
