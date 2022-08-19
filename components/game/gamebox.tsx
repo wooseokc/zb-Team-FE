@@ -486,7 +486,21 @@ export default function GameSection (props : props) {
   /// 성공 데이터 전송
 
   useEffect(() => {
-    setPostObj({...postObj, steps : JSON.stringify(steps)})
+    let tmpArMines = postObj.nearbyMines?.slice() as number[]
+    let tmpMiArr : string[] = postObj.isMine?.slice() as string[]
+
+
+    for (let i=0; i<tmpMiArr?.length ; i++) {
+      if (tmpMiArr[i] === 'mine') {
+        tmpArMines[i] = -1;
+      }
+    }
+
+    let tmpObj = {...postObj};
+    delete tmpObj.isMine
+
+    setPostObj({...tmpObj, nearbyMines : tmpArMines, steps : JSON.stringify(steps)})
+
   }, [suc])
 
 
