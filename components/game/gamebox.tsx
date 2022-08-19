@@ -118,6 +118,7 @@ export default function GameSection (props : props) {
     }
 
     setPostObj({gamerId: Number(sessionStorage.getItem('gamerId')), width : width, height : height, numMines : howManyMines,  isMine : mineArr, nearbyMines : aroundArr, isAnon : true, timePlayed : 0, steps: ''})
+    setFlagCount(0)
 
   } , [total])
 
@@ -231,7 +232,7 @@ export default function GameSection (props : props) {
     }
 
     // 지뢰를 클릭했을 경우 
-    if (tmpArr[targetIndex][2] === 'mine') {
+    if (tmpArr[targetIndex][2] === 'mine' && tmpArr[targetIndex][4] === false) {
       tmpArr.map((item) => {
         if (item[2] === 'mine') {
           item[1] = 'open'
@@ -282,7 +283,7 @@ export default function GameSection (props : props) {
             flagCount ++;
           }
         }
-
+        console.log(flagCount)
         if (tmpArr[targetIndex][3] === flagCount && tmpArr[targetIndex][3] !== 0) {
           if (Number(target.dataset.t) % width === 0) {
             aroundMine(Number(target.dataset.t)-width)
@@ -508,7 +509,7 @@ export default function GameSection (props : props) {
   return (
     <GameContainer>
       <GameInfoBox>
-        <GameInfoItem>지뢰 : {howManyMines}</GameInfoItem>
+        <GameInfoItem>지뢰 : {howManyMines - flagCount}</GameInfoItem>
         <GameInfoItem>Flag : {flagCount}</GameInfoItem>
         <GameInfoItem>time : {(suc || fail || gameStatus !== null)  ? `${timer.min}:${timer.sec}:${Math.floor(timer.milli / 10)}` : '0:00:00'}</GameInfoItem>
       </GameInfoBox>

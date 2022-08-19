@@ -54,6 +54,18 @@ export default function MyPage () {
       console.log('err')
     })
   }
+  const GameGet = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    let gamerId = sessionStorage.getItem('gamerId')
+    console.log(gamerId)
+
+    await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/15`).then(res => {
+     
+      console.log(res.data)
+   
+    }).catch(() => {
+      console.log('err')
+    })
+  }
 
   return (
     <MyPageSection>
@@ -66,6 +78,7 @@ export default function MyPage () {
         <button onClick={onPost}>post</button>
         <button onClick={clearStore}>clear</button>
         <button onClick={ListGet}>List</button>
+        <button onClick={GameGet}>gmaeGet</button>
 
       </MyPageItem>
 
