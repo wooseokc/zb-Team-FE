@@ -1,5 +1,5 @@
 import React from "react";
-import styled from 'styled-components';
+import EmailAuthForm from '../../components/info/EmailAuthForm';
 import Layout from "../../components/layout";
 import Navbar from "../../components/navbar";
 
@@ -7,10 +7,7 @@ export default function emailAuthPage () {
 
   return (
     <>
-      <AccountDivBox>
-        <AccountTextBox>인증번호</AccountTextBox>
-        <StyledInput type='text' required />
-      </AccountDivBox>
+      <EmailAuthForm />
     </>
   )
 }
@@ -24,28 +21,3 @@ emailAuthPage.getLayout = function getLayout(page) {
   )
 }
 
-const AccountDivBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 10px 0;
-  .emailBtn {
-    width: 80px;
-    cursor: pointer;
-
-    margin-left: 10px;
-  }
-      `;
-
-const AccountTextBox = styled.span`
-  width: 100px;
-
-  display: inline-block;
-        `;
-
-const StyledInput = styled.input`
-  width: 200px;
-  height: 25px;
-  box-sizing: border-box;
-    
-  padding: 0;
-`;

@@ -1,14 +1,18 @@
 import React, { useState } from "react";
-import Link  from 'next/link';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import axios from 'axios';
 import { setAuthToken } from './_helpers/setAuthToken';
 
+//test id : hanjoondev@gmail.com
+//      pw : test
 
 export default function Login() {
   const [loginId, setLoginId] = useState('');
   const [loginPw, setLoginPw] = useState('');
   const [error, setError] = useState('');
+  const router = useRouter();
 
   const regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   
@@ -38,9 +42,11 @@ export default function Login() {
 
             setAuthToken(data.accessToken);
 
-            window.location.href = '/';
+            // window.location.href = '/';
+            router.push('/')
           })
-      } catch(error) {
+      } catch (error) {
+        console.log(error);
         setError('ID와 PASSWORD를 확인 해주세요');
       }
       
