@@ -17,13 +17,15 @@ export default function Account() {
     // console.log(email);
     const regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
     if (email.length < 5 || !regExp.test(email)) {
-      setError('email을 확인 해주세요.');
+      setError('ID를 확인 해주세요.');
     } else {
       const response = await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/gamer/email/${email}`) 
       if (response.data) {
         setEmailResult(prev => !prev);
+      } else {
+        setError('해당 ID가 존재합니다.')
+        console.log(response.data);
       }
-      console.log(response.data);
     }
   }
 
