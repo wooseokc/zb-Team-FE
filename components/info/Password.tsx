@@ -1,69 +1,167 @@
-import React from "react";
+import axios from 'axios';
+import React, { useState } from "react";
 import styled from 'styled-components';
 
 export default function Password() {
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+  let emailAuthKey = '';
   
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const data = {
+      email: email,
+      validationKey: emailAuthKey,
+    }
+    try {
+      const respone = await axios.post('https://minesweeper.hanjoon.dev/minesweeper/gamer/validation', data)
+      console.log(respone);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const emailChangedHandler = (e: React.FormEvent<HTMLInputElement>) => {
+    setEmail(e.currentTarget.value);
+  }
+
+  const emailAuthSubmit = async () => {
+    if (!emailRegExp.test(email)) {
+      setError('ID를 확인해주세요.')
+      return;
+    } else {
+      setError('');
+    }
+    const data = {
+      email: email,
+    }
+    const respone = await axios.patch('https://minesweeper.hanjoon.dev/minesweeper/gamer/validation', data)
+    console.log(respone);
+    emailAuthKey = respone.data;
   }
 
   return (
     <StyleForm onSubmit={onSubmit}>
-      <div><span>ID</span><input type='email' required placeholder='Email을 입력해주세요' /><input type='button' value='이메일 인증' /></div>
-      <div><span>인증번호</span><input type='password' required placeholder='비밀번호를 입력해주세요' /></div>
-      <div><input type='submit' value='완료' /></div>
+      <PasswordAuthEmailBox>
+        <PasswordAuthEmailName>ID</PasswordAuthEmailName>
+        <PasswordAuthEmailInput
+          type='email'
+          required
+          placeholder='Email을 입력해주세요'
+          onChange={emailChangedHandler}
+        />
+        <PasswordAuthEmailAuthBtn type='button' value='이메일 인증' onClick={emailAuthSubmit} />
+      </PasswordAuthEmailBox>
+      {error && <ErrorSpan className='authError'>{error}</ErrorSpan>}
+      <PasswordAuthNumBox>
+        <PasswordAuthNumName>인증번호</PasswordAuthNumName>
+        <PasswordAuthNumInput type='password' required placeholder='인증번호를 입력해주세요' />
+      </PasswordAuthNumBox>
+      <PaaswordAuthSubmitBtn type='submit' value='완료' />
     </StyleForm>
   )
 }
 const StyleForm = styled.form`
   width: 100%;
   max-width: 400px;
+  height: 150px;
   
-  border: 1px solid black;
+  border: 2px solid #e6e6e6;
+  border-radius: 15px;
 
+  margin: 0 auto;
+  padding: 10px;
+  
   position: relative;
-  top: 100px;
+  top: 150px;
+
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
-  padding: 10px 10px;
-  div {
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
-  }
-  span {
-    width: 100px;
+  justify-content: space-between;
 
-    display: inline-block;
-  }
   input {
-    height: 25px;
-    box-sizing: border-box;
-    
     padding: 0;
+    box-sizing: border-box;
   }
-  div:nth-child(3) {
-    width: 150px;
-
-    margin: 0 auto;
-    button { 
-      width: 100%;
-      background-color: #fff;
-      outline: 0;
-      border: 0;
-
-      cursor: pointer;
-    }
-  }
-  div:nth-child(4) {
-    width: 150px;
-
-    margin: 10px auto;
-    input{
-      width: 100%;
-
-      cursor: pointer;
-    }
-  }
+  
 `
+const PasswordAuthEmailBox = styled.div`
+  width: 100%;
+
+  margin-bottom: 15px;
+`;
+const PasswordAuthEmailName = styled.span`
+  width: 80px;
+
+  display: inline-block;
+`;
+
+const PasswordAuthEmailInput = styled.input`
+  width: 200px;
+  height: 25px;
+  border: 2px solid #e6e6e6;
+  border-radius: 8px;
+`;
+
+const PasswordAuthEmailAuthBtn = styled.input`
+  width: 100px;
+  height: 25px;
+  border: 2px solid #e6e6e6;
+  border-radius: 8px;
+
+  margin-left: 10px;
+  
+  background-color: #fff;
+
+
+  display: inline-block;
+  cursor: pointer;
+  &:hover {
+    background-color: #464646;
+    color:#fff;
+  }
+`;
+
+const PasswordAuthNumBox = styled.div`
+  width: 100%;
+`;
+
+const PasswordAuthNumName = styled.span`
+  width: 80px;
+
+  display: inline-block;
+`;
+
+const PasswordAuthNumInput = styled.input`
+  width: 200px;
+  height: 25px;
+  border: 2px solid #e6e6e6;
+  border-radius: 8px;
+`;
+
+const PaaswordAuthSubmitBtn = styled.input`
+  width: 120px;
+  height: 25px;
+  border: 2px solid #e6e6e6;
+  border-radius: 8px;
+
+  margin: 15px auto;
+
+  background-color: #fff;
+
+  display: inline-block;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #464646;
+    color:#fff;
+  }
+`;
+
+const ErrorSpan = styled.span`
+  color: tomato;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+`;
