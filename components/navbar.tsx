@@ -115,8 +115,8 @@ const NavButton = styled.button<{char? : string}>`
 const LoginButton = styled.button`
   background: inherit ; box-shadow:none; padding:0; overflow:visible; cursor:pointer;
 
-  width : 60px;
-  height : 30px;
+  min-width : 70px;
+  height : 40px;
 
   border : 0;
   border-radius: 6px;
@@ -137,12 +137,15 @@ const LoginButton = styled.button`
 const LogOutButton = styled.button`
   background: inherit ; box-shadow:none; padding:0; overflow:visible; cursor:pointer;
 
-  width : 60px;
-  height : 30px;
-
+  min-width : 70px;
+  height : 40px;
+  
   border : 0;
   border-radius: 6px;
   outline: 0;
+  
+  padding: 5px;
+  
   color: white;
   font-weight: bold;
   font-size: 14px;
