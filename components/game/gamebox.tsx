@@ -376,7 +376,7 @@ export default function GameSection (props : props) {
     }
 
     async function resultPost () {
-      await axios.post('https://minesweeper.hanjoon.dev/minesweeper/game', postObj).then(res => {
+      await axios.post('http://34.168.232.38:8080/minesweeper/game', postObj).then(res => {
         console.log(res)
         let gamerResId : number = res.data.gamerId;
         console.log(gamerResId)

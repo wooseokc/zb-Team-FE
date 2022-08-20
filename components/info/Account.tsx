@@ -22,6 +22,7 @@ export default function Account() {
       const response = await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/gamer/email/${email}`) 
       if (response.data) {
         setEmailResult(prev => !prev);
+        console.log(response.data)
       } else {
         setError('해당 ID가 존재합니다.')
         console.log(response.data);
