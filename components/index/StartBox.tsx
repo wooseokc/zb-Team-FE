@@ -23,7 +23,13 @@ export default function Start () {
 const StartSection = styled.section`
   width : 250px;
   height : 100px;
-  border : 1px solid;
+  border : 2px solid #49add8;
+
+  color : #464646;
+  font-weight: 600;
+
+  border-radius: 20px;
+  padding: 10px;
 
   position : relative;
   top : 70px;
@@ -37,6 +43,7 @@ height : 40px;
 position : relative;
 left : 50%;
 transform: translateX(-50%);
+color : #464646;
 
 display : flex;
 justify-content: space-between;
@@ -64,11 +71,20 @@ const StartButton = styled.button`
 
   width : 200px;
   height : 40px;
-  border : 1px solid;
+  border : 1px solid #49add8;
   border-radius: 5px;
+
+  color : #464646;
+  font-size: 15px;
+  font-weight: 700;
 
   position : relative;
   left : 50%;
   transform: translateX(-50%);
+
+  :hover {
+    border : 2px solid #3399c5;
+    font-weight: 900;
+  }
 `
 

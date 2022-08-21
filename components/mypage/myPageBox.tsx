@@ -25,8 +25,14 @@ export default function MyPage () {
           const playTime : string = items[2]
           const gameId : string = items[3]
 
+          const splitWithT = createdAt.split('T');
+          const splitWithDate = splitWithT[0].split('-')
+          const Hour = splitWithT[1].split(':')[0]
+          const Minute = splitWithT[1].split(':')[1]
+
+
           return (
-            <button key={gameId} value={gameId} onClick={goToGame}> {createdAt} :  {difficulty} : {playTime} </button>
+            <GameButton key={gameId} value={gameId} onClick={goToGame}>{'< '} {splitWithDate[0]}년 {splitWithDate[1]}월 {splitWithDate[2]}일 {Hour}시 {Minute}분 {'>'} 　　난이도 : {difficulty} </GameButton>
           )
         })
 
@@ -118,11 +124,14 @@ export default function MyPage () {
 
   return (
     <MyPageSection>
-      <MyPageItem>
+      <PageInfo >나의과거게임</PageInfo>
+      <MyPageItem char={'game'}>
+        
         {listItems}
       </MyPageItem>
-      <MyPageItem>
-        나의 업적 등등
+      <PageInfo>나의 업적</PageInfo>
+      <MyPageItem char ={'carrer'}>
+        
         <button onClick={onSubmit}>stroge</button>
         <button onClick={onSubmit2}>get</button>
         <button onClick={onPost}>post</button>
@@ -141,8 +150,7 @@ export default function MyPage () {
 
 const MyPageSection = styled.section`
   width : 50%;
-  height : 600px;
-  border : 1px solid;
+  height : 620px;
 
   position : relative;
   left : 50%;
@@ -155,10 +163,38 @@ const MyPageSection = styled.section`
   justify-content: space-around;
 `
 
-const MyPageItem = styled.div`
-  width : 400px;
-  height : 250px;
-  border : 1px solid;
+const PageInfo = styled.p`
+  margin: 0;
+`
 
+const MyPageItem = styled.div<{char : string}>`
+  width : 400px;
+  height : ${props => props.char === 'game' ? '320px' : '150px'};
+  border : 2px solid #3399c5;
+  border-radius: 20px;
+
+  padding: 20px;
+
+  position: relative;
+  top : 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+const GameButton = styled.button`
+  width: 350px;
+  margin-top: 5px;
+  background: #76c5da;
   
+  border: 0px;
+  border-radius: 5px;
+  padding: 2px;
+  padding-left : 10px;
+  padding-right: 10px;
+  height: 25px;
+  font-size: 12px;
+
+  :hover {
+    background: #215c6c;
+  }
 `

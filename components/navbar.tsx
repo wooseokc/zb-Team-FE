@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Link from 'next/link'
 import Image from 'next/image'
-import Bomb from '../public/free-icon-bomb.png'
+import Bomb from './images/free-icon-bomb.png'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'

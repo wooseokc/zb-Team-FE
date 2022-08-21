@@ -19,7 +19,10 @@ export default function RankBox () {
 const Box = styled.section`
   width : 300px;
   height : 350px;
-  border : 1px solid;
+  border : 2px solid #49add8;
+
+  border-radius: 20px;
+  padding: 20px;
 
   cursor: pointer;
 

@@ -22,7 +22,7 @@ const StyleSection = styled.section`
   position: relative;
   left : 50%;
   transform: translateX(-50%);
-  top: 100px;
+  top: 80px;
   
   display: flex;
   justify-content: space-between;
@@ -32,7 +32,12 @@ const AccountButton = styled.button`
   background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer;
 
   width : 70px;
-  border : 1px solid;
+  border : 2px solid #3399c5;
+  padding: 5px;
   border-radius: 10px;
+
+  :hover {
+    font-weight: 900;
+  }
 `
 
