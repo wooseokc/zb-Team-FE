@@ -16,7 +16,7 @@ export default function MyLastGame (props: { id: string}) {
 
   useEffect(() => {
     if (props.id) {
-      axios.get(`http://34.168.232.38:8080/minesweeper/game/${props.id}`).then(res => {
+      axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/${props.id}`).then(res => {
         setStep(JSON.parse(res.data.steps))
         let arrLength : number = 0;
         if (res.data.difficulty === 'Easy') {

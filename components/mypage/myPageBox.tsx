@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from 'next/router';
-import { JsxAttribute } from "typescript";
 
 export default function MyPage () {
   const [listItems, setListItems] = useState<JSX.Element>()
