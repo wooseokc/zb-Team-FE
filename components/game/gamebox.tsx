@@ -23,6 +23,7 @@ export default function GameSection (props : props) {
   const [flagCount, setFlagCount] = useState(0);
   const [gameStatus, setGameStatus] = useState<number | null>(null)
   const [steps, setSteps] = useState<(number | number [])[][] >([])
+  const [howManyOpen, setHowManyOpen] = useState(0)
   
   const [startTime, setStartTime] = useState({
     milli : 0,
@@ -313,7 +314,8 @@ export default function GameSection (props : props) {
     }
 
     let openedCount = tmpArr.filter(item => item[1] === 'open').length
-    if (openedCount === total - howManyMines) {
+    setHowManyOpen(openedCount)
+    if (openedCount === total - howManyMines && flagCount === howManyMines) {
       setSuc(true)
       setGameStatus(null);
     }
@@ -416,6 +418,7 @@ export default function GameSection (props : props) {
     e.preventDefault();
     const target = e.currentTarget
     const targetIndex : number = Number(target.dataset.t);
+    let flagC = flagCount;
 
     let tmpStep = [2, targetIndex, [targetIndex]];
 
@@ -425,11 +428,18 @@ export default function GameSection (props : props) {
       if (tmpArr[targetIndex][4] === true) {
         tmpArr[targetIndex][4] = false
         setFlagCount(c => c - 1);
+        flagC --;
       }
       else {
         tmpArr[targetIndex][4] = true;
         setFlagCount(c => c + 1);
+        flagC ++;
       }
+    }
+
+    if (howManyOpen === total - howManyMines && flagC === howManyMines) {
+      setSuc(true)
+      setGameStatus(null);
     }
 
     setArr(tmpArr)
