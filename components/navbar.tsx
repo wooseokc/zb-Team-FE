@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Link from 'next/link'
 import Image from 'next/image'
+import Bomb from '../public/free-icon-bomb.png'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
@@ -46,7 +47,7 @@ export default function Navbar() {
     <NavBox>
       <Link href="/">
         <NavButton char='logo'>
-          <Image src='/free-icon-bomb.png' alt='bomlogo' width='40' height="40"/>
+          <Image src={Bomb} alt='bomlogo' width='40' height="40"/>
         </NavButton>
       </Link>
       <NavListBox>
