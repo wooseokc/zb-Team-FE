@@ -24,8 +24,8 @@ export default function Login() {
     } else {
       try {
         const loginPayload = {
-        'email': loginId,
-        'password': loginPw,
+          'email': loginId,
+          'password': loginPw,
         };
 
         await axios

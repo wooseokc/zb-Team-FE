@@ -11,7 +11,7 @@ export default function MyPage () {
     let list; 
     if (sessionStorage.getItem('gamerId')) {
       let gamerId = sessionStorage.getItem('gamerId')
-      axios.get(`http://34.168.232.38:8080/minesweeper/game/list/${gamerId}`).then(res => {
+      axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/list/${gamerId}`).then(res => {
         console.log(res.data)
 
         list = new Array(res.data.gameList.length)
@@ -76,10 +76,10 @@ export default function MyPage () {
     console.log('wait')
     const data = {
       email : "abcd@naver.com",
-      name : '홍길동',
+      name : '테스트',
       password : '1234'
     }
-    await axios.post(`http://34.168.232.38:8080/minesweeper/gamer`, (data)).then(res => {
+    await axios.post(`https://minesweeper.hanjoon.dev/minesweeper/gamer`, (data)).then(res => {
      
       console.log(res.data)
    
@@ -96,7 +96,7 @@ export default function MyPage () {
     let gamerId = sessionStorage.getItem('gamerId')
     console.log(gamerId)
 
-    await axios.get(`http://34.168.232.38:8080/minesweeper/game/list/${gamerId}`).then(res => {
+    await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/list/${gamerId}`).then(res => {
      
       console.log(res.data)
    
