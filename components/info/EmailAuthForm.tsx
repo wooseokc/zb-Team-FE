@@ -1,40 +1,65 @@
 import axios from 'axios';
+import {  useRouter } from 'next/router';
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
 
 function EmailAuthForm() {
-  
   const [error, setError] = useState<string>('');
-  const tmpemail = { email: 'hanjoondev@gmail.com' }
+  // const tmpemail = 'eekimoon@naver.com'
+  let email: string | null = '';
+  let emailAuthKey: string | null = '';
+  let router = useRouter();
   
-
   const onSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const respone = await axios.post(`https://minesweeper.hanjoon.dev/minesweeper/gamer/validation/${tmpemail}`)
-    console.log(respone);
+    email = sessionStorage.getItem('email');
+    const data = {
+      email: email,
+      validationKey: emailAuthKey
+    }
+    try {
+      const respone = await axios.post(`https://minesweeper.hanjoon.dev/minesweeper/gamer/validation`, data)
+      if (respone.data) {
+        router.push('/');
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   const emailAuthResend = async () => {
-    
+    email = sessionStorage.getItem('email');
     try {
-      const respone = await axios.patch(`https://minesweeper.hanjoon.dev/minesweeper/gamer/validation`, tmpemail);
+      const respone = await axios.patch(`https://minesweeper.hanjoon.dev/minesweeper/gamer/validation`, { 'email': email});
       console.log(respone)
       if (!respone.data) {
         setError('이메일을 확인해주세요.');
       }
       
     } catch (e) {
-      console.dir(e);
+      console.error(e);
     }
 
+  }
+
+    const AuthNumberHandler = (e: React.FormEvent<HTMLInputElement>) => {
+    const { currentTarget: { value } } = e;
+    emailAuthKey = value;
+    // console.log(emailAuthKey)
   }
 
   return (
     <StyleForm onSubmit={onSubmit}>
       <EmailAuthNubmerBox>
         <EmailAuthNumberName>인증번호</EmailAuthNumberName>
-        <EmailAuthNumberInput type='text' minLength={6} required placeholder='인증번호를 입력해주세요' />
+        <EmailAuthNumberInput
+          type='text'
+          minLength={6}
+          required
+          placeholder='인증번호를 입력해주세요'
+          onChange={AuthNumberHandler}
+        />
       </EmailAuthNubmerBox>
       {error && <ErrorSpan className='authError'>{error}</ErrorSpan>}
       <EmailAuthNumberResendBtn onClick={emailAuthResend}>인증번호 재발송</EmailAuthNumberResendBtn>
