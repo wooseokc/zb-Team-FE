@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -22,7 +23,6 @@ export default function MyPage () {
         let lists = list.map((items, idx) => {
           const createdAt : string = items[0] 
           const difficulty : string = items[1]
-          const playTime : string = items[2]
           const gameId : string = items[3]
 
           const splitWithT = createdAt.split('T');
