@@ -22,7 +22,6 @@ export default function Login() {
     if (loginId.length < 5 || !regExp.test(loginId)) { 
       setError('ID를 확인 해주세요.')
     } else {
-      try {
         const loginPayload = {
           'email': loginId,
           'password': loginPw,
@@ -36,6 +35,7 @@ export default function Login() {
             localStorage.setItem('accessToken', data.accessToken)
             localStorage.setItem('refreshToken', data.refreshToken)
             sessionStorage.setItem('gamerId', String(data.gamerId))
+            sessionStorage.setItem('email', loginId);
 
             console.log(response.data.gamerId)
             // JWT 토큰 로컬에 저장
@@ -43,14 +43,14 @@ export default function Login() {
             setAuthToken(data.accessToken);
 
             // window.location.href = '/';
-            router.push('/')
+            router.push('/');
+          }).catch(e => {
+            if (e.response.data.error === 'Unauthorized') {
+              router.push('/info/emailAuthPage')
+            }
+            setError('ID와 PASSWORD를 확인 해주세요');
           })
-      } catch (error) {
-        console.log(error);
-        setError('ID와 PASSWORD를 확인 해주세요');
-      }
-      
-    }  
+      } 
 
   }
 
@@ -61,6 +61,22 @@ export default function Login() {
       setLoginPw(e.currentTarget.value);
     }
     
+  }
+
+  const testapi = async() => {
+    try {
+      delete axios.defaults.headers.common["Authorization"];
+      const respone = await axios.delete('https://minesweeper.hanjoon.dev/minesweeper/gamer', {
+        data: {
+          'email': loginId,
+          'password': loginPw
+        }
+      });
+      console.log(respone);
+      
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   return (
@@ -92,6 +108,7 @@ export default function Login() {
         <SytledLink>비밀번호 찾기</SytledLink>
       </Link>
       <InputBox><SubmitBtn type='submit' value='로그인' /></InputBox>
+      <InputBox><SubmitBtn type='button' value='회원탈퇴' onClick={testapi} /></InputBox>
     </StyleForm>
   )
 }
