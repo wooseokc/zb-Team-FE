@@ -80,7 +80,7 @@ export default function MyPage () {
   const onPost = async (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log('wait')
     const data = {
-      email : "abcd@naver.com",
+      email : "abcdeeeee@naver.com",
       name : '테스트',
       password : '1234'
     }
@@ -109,6 +109,8 @@ export default function MyPage () {
       console.log('err')
     })
   }
+
+
   const GameGet = async (e: React.MouseEvent<HTMLButtonElement>) => {
     let gamerId = sessionStorage.getItem('gamerId')
     console.log(gamerId)

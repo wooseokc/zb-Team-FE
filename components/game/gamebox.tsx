@@ -249,7 +249,7 @@ export default function GameSection (props : props) {
       } else {
         let flagCount : number = 0;
         if (tmpArr[targetIndex-width-1] && tmpArr[targetIndex-width-1][4] === true) {
-          if (targetIndex % 10 !== 0) {
+          if (targetIndex % width !== 0) {
             flagCount ++;
           }
         }
@@ -257,22 +257,22 @@ export default function GameSection (props : props) {
           flagCount ++;
         }
         if (tmpArr[targetIndex-width+1] && tmpArr[targetIndex-width+1][4] === true) {
-          if (targetIndex % 10 !== width - 1) {
+          if (targetIndex % width !== width - 1) {
             flagCount ++;
           }
         }
         if (tmpArr[targetIndex-1] && tmpArr[targetIndex-1][4] === true) {
-          if (targetIndex % 10 !== 0) {
+          if (targetIndex % width !== 0) {
             flagCount ++;
           }
         }
         if (tmpArr[targetIndex+1] && tmpArr[targetIndex+1][4] === true) {
-          if (targetIndex % 10 !== width - 1) {
+          if (targetIndex % width !== width - 1) {
             flagCount ++;
           }
         }
         if (tmpArr[targetIndex+width-1] && tmpArr[targetIndex+width-1][4] === true) {
-          if (targetIndex % 10 !== 0) {
+          if (targetIndex % width !== 0) {
             flagCount ++;
           }
         }
@@ -280,7 +280,7 @@ export default function GameSection (props : props) {
           flagCount ++;
         }
         if (tmpArr[targetIndex+width+1] && tmpArr[targetIndex+width+1][4] === true) {
-          if (targetIndex % 10 !== width - 1) {
+          if (targetIndex % width !== width - 1) {
             flagCount ++;
           }
         }
