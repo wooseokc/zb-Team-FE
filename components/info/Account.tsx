@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react'
 import styled from 'styled-components';
 
@@ -29,7 +30,8 @@ export default function Account() {
       }
     }
   }
-
+  
+  const router = useRouter();
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const infoData = {
@@ -37,8 +39,14 @@ export default function Account() {
       name: nickName,
       password,
     };
-    const respone = await axios.post(`https://minesweeper.hanjoon.dev/minesweeper/gamer/`, infoData)
-    console.log(respone);
+    try {
+      const respone = await axios.post(`https://minesweeper.hanjoon.dev/minesweeper/gamer/`, infoData)
+      console.log(respone);
+      router.push('/info/emailAuthPage')
+      sessionStorage.setItem('email', email);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   //email 정보 저장 이벤트

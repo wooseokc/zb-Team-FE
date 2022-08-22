@@ -45,8 +45,12 @@ export default function Login() {
             // window.location.href = '/';
             router.push('/');
           }).catch(e => {
+            console.log(e.response);
             if (e.response.data.error === 'Unauthorized') {
+              sessionStorage.setItem('email', loginId);
               router.push('/info/emailAuthPage')
+            } else {
+              router.push('/')
             }
             setError('ID와 PASSWORD를 확인 해주세요');
           })
