@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import React, { useState } from "react";
 import styled from 'styled-components';
 
@@ -7,6 +8,8 @@ export default function Password() {
   const [error, setError] = useState('');
   const emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   let emailAuthKey = '';
+
+  const router = useRouter();
   
   const onSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -14,16 +17,20 @@ export default function Password() {
       email: email,
       validationKey: emailAuthKey,
     }
+    // console.log(data.validationKey);
     try {
       const respone = await axios.post('https://minesweeper.hanjoon.dev/minesweeper/gamer/validation', data)
-      console.log(respone);
+      // console.log(respone);
+      if (respone.data) {
+        router.push('/');
+      }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   }
 
   const emailChangedHandler = (e: React.FormEvent<HTMLInputElement>) => {
-    setEmail(e.currentTarget.value);
+    setEmail(e.currentTarget.value);  
   }
 
   const emailAuthSubmit = async () => {
@@ -36,9 +43,14 @@ export default function Password() {
     const data = {
       email: email,
     }
-    const respone = await axios.patch('https://minesweeper.hanjoon.dev/minesweeper/gamer/validation', data)
-    console.log(respone);
-    emailAuthKey = respone.data;
+    await axios.patch('https://minesweeper.hanjoon.dev/minesweeper/gamer/validation', data)
+    // console.log(respone);
+  }
+
+  const AuthNumberHandler = (e: React.FormEvent<HTMLInputElement>) => {
+    const { currentTarget: { value } } = e;
+    emailAuthKey = value;
+    // console.log(emailAuthKey)
   }
 
   return (
@@ -56,7 +68,7 @@ export default function Password() {
       {error && <ErrorSpan className='authError'>{error}</ErrorSpan>}
       <PasswordAuthNumBox>
         <PasswordAuthNumName>인증번호</PasswordAuthNumName>
-        <PasswordAuthNumInput type='password' required placeholder='인증번호를 입력해주세요' />
+        <PasswordAuthNumInput type='text' required placeholder='인증번호를 입력해주세요' onChange={AuthNumberHandler}/>
       </PasswordAuthNumBox>
       <PaaswordAuthSubmitBtn type='submit' value='완료' />
     </StyleForm>
