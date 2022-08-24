@@ -1,13 +1,12 @@
 import React from "react";
 import Layout from "../../components/layout";
 import Navbar from "../../components/navbar";
+import RankPage from "../../components/rank/RankPage";
 
 export default function Rank () {
 
   return (
-    <div>
-      로그인 페이지입니다
-    </div>
+    <RankPage/>
   )
 }
 

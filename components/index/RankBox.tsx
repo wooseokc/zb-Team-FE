@@ -1,14 +1,124 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from 'next/link'
 import styled from "styled-components";
+import axios from "axios";
 
 export default function RankBox () {
+  const [firstArr, setFirstArr] = useState<{ gamerId : number,
+    gameId : number,
+    name : string,
+    ranking : number,
+    time : number}[]>
+  ([])
+
+  const [easy, setEasy] = useState<JSX.Element[]>([])
+  const [medium, setMedium] = useState<JSX.Element[]>([])
+  const [hard, setHard] = useState<JSX.Element[]>([])
+
+
+  
+
+  async function apiRankE () {
+    await axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/gamer-ranking?difficulty=Easy&pageIdx=0&pageSize=3`).then(res => {
+      console.log(res.data.contents)
+      let arr = res.data.contents
+      setEasy(
+        arr.map((item, idx) => {
+          let rank : number = item.ranking
+          let name : string = item.name
+          let time : number = item.time
+          let milli : number = time%1000;
+          time = Math.floor(time / 1000);
+          let sec : number = time % 60
+          time = Math.floor(time/60);
+          let min : number = time
+          return (
+            <RankItem key={rank} rankes={rank}>
+              <RankNum rankes={rank}>{rank}</RankNum>
+              <RankName>{name}</RankName>
+              <RankTime>{min > 0 && `${min} 분`} {sec}.{milli} 초</RankTime>
+            </RankItem>
+          )
+        })
+      )
+    })
+  }
+  async function apiRankM () {
+    await axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/gamer-ranking?difficulty=Medium&pageIdx=0&pageSize=3`).then(res => {
+      console.log(res.data.contents)
+      let arr = res.data.contents
+      setMedium(
+        arr.map((item, idx) => {
+          let rank : number = item.ranking
+          let name : string = item.name
+          let time : number = item.time
+          let milli : number = time%1000;
+          time = Math.floor(time / 1000);
+          let sec : number = time % 60
+          time = Math.floor(time/60);
+          let min : number = time
+          return (
+            <RankItem key={rank} rankes={rank}>
+              <RankNum rankes={rank}>{rank}</RankNum>
+              <RankName>{name}</RankName>
+              <RankTime>{min > 0 && `${min} 분`} {sec}.{milli} 초</RankTime>
+            </RankItem>
+          )
+        })
+      )
+    })
+  }
+  async function apiRankH () {
+    await axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/gamer-ranking?difficulty=Hard&pageIdx=0&pageSize=3`).then(res => {
+      console.log(res.data.contents)
+      let arr = res.data.contents
+      setHard(
+        arr.map((item, idx) => {
+          let rank : number = item.ranking
+          let name : string = item.name
+          let time : number = item.time
+          let milli : number = time%1000;
+          time = Math.floor(time / 1000);
+          let sec : number = time % 60
+          time = Math.floor(time/60);
+          let min : number = time
+          return (
+            <RankItem key={rank} rankes={rank}>
+              <RankNum rankes={rank}>{rank}</RankNum>
+              <RankName>{name}</RankName>
+              <RankTime>{min > 0 && `${min} 분`} {sec}.{milli} 초</RankTime>
+            </RankItem>
+          )
+        })
+      )
+    })
+  }
+
+  useEffect(() => {
+    apiRankE()
+    apiRankM()
+    apiRankH()
+  },[])
+
+
 
   return (
     <>
       <Link href="/board/rank">
         <Box>
-          랭킹 박스
+          <WordBox>명예의 전당</WordBox>
+          초급
+          <RankBoxss>
+            {easy}
+          </RankBoxss>
+          중급
+          <RankBoxss>
+            {medium}
+          </RankBoxss>
+          고급
+          <RankBoxss>
+            {hard}
+          </RankBoxss>
         </Box>
       </Link>
     </>
@@ -22,7 +132,9 @@ const Box = styled.section`
   border : 2px solid #49add8;
 
   border-radius: 20px;
-  padding: 20px;
+  padding: 10px;
+
+  text-align: center;
 
   cursor: pointer;
 
@@ -30,5 +142,108 @@ const Box = styled.section`
   top: 50px;
   left : 50%;
   transform: translateX(-50%);
+
+  font-size: 13px;
+  font-weight: 800;
 `
 
+
+const RankItem = styled.button<{rankes : number, ref?}>`
+
+  border: none;
+  
+  width: 100%;
+  height: 25px;
+  background-color: #433f3f;
+
+  display: flex;
+  color : #fff;
+  border-radius: 5px;
+
+  margin-bottom: 5px;
+
+  cursor: pointer;
+
+
+  :hover {
+    overflow: hidden;
+    color : black
+  }
+
+  ${props => props.rankes === 1 && {backgroundColor : '#ffd700', fontWeight : 600}}
+  ${props => props.rankes === 2 && {backgroundColor : '#c0c0c0', fontWeight : 600}}
+  ${props => props.rankes === 3 && {backgroundColor : '#be6565db', fontWeight : 600}}
+`
+
+const RankNum = styled.div<{rankes : number}>`
+  width: 25px;
+  height: 25px;
+
+  padding-top: 2px;
+
+  font-size: 20px;
+  text-align: center;
+
+  ${props => (props.rankes === 1 ||  props.rankes === 2 ||  props.rankes === 3) && {paddingTop : '0px'}}
+`
+const RankName = styled.div`
+  width: 100px;
+  height: 25px;
+
+  padding-top: 5px;
+
+  font-size: 14px;
+  text-align: left;
+
+  position: relative;
+  top: 0px;
+  left : 20px;
+
+`
+
+const RankTime = styled.div`
+  width: 100px;
+  height: 25px;
+
+
+  padding-top: 5px;
+
+  font-size: 14px;
+  text-align: left;
+
+  position: relative;
+  left : 40px;
+`
+
+const RankBoxss = styled.div`
+  width: 80%;
+  height: 85px;
+
+  border: 2px solid #49add8;
+  border-radius: 10px;
+
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  top : 0px;
+
+  padding: 5px;
+
+
+
+  font-size: 10px;
+  margin-bottom: 3px;
+
+  overflow: hidden;
+`
+
+const WordBox = styled.div`
+  position: absolute;
+
+  left: 50%;
+  transform: translateX(-50%);
+  top :  -25px;
+
+  font-weight: 900;
+  font-size: 13px;
+`
