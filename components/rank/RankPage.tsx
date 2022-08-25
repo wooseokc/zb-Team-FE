@@ -20,7 +20,7 @@ export default function RankPage () {
   ([])
 
   async function apiRank () {
-    await axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/gamer-ranking?difficulty=${diff}&pageIdx=${page}&pageSize=15`).then(res => {
+    await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/gamer-ranking?difficulty=${diff}&pageIdx=${page}&pageSize=15`).then(res => {
 
       if (!rankArr[0] && !res.data.contents[0]) {
 

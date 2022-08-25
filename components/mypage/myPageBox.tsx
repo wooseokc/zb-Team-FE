@@ -27,7 +27,7 @@ export default function MyPage () {
     }
     let gamerId = sessionStorage.getItem('gamerId')
     if (sessionStorage.getItem('gamerId') && loginStatus) {
-      axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/stat/${gamerId}`).then(res => {
+      axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/stat/${gamerId}`).then(res => {
         let data = res.data
 
         setCarrer({

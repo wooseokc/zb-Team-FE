@@ -19,7 +19,7 @@ export default function RankBox () {
   const rankdispatch : any = useContext(DiffContext).dispatch
   
   async function apiRankE () {
-    await axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/gamer-ranking?difficulty=Easy&pageIdx=0&pageSize=3`).then(res => {
+    await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/gamer-ranking?difficulty=Easy&pageIdx=0&pageSize=3`).then(res => {
       let arr = res.data.contents
       setEasy(
         arr.map((item, idx) => {
@@ -43,7 +43,7 @@ export default function RankBox () {
     })
   }
   async function apiRankM () {
-    await axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/gamer-ranking?difficulty=Medium&pageIdx=0&pageSize=3`).then(res => {
+    await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/gamer-ranking?difficulty=Medium&pageIdx=0&pageSize=3`).then(res => {
       let arr = res.data.contents
       setMedium(
         arr.map((item, idx) => {
@@ -67,7 +67,7 @@ export default function RankBox () {
     })
   }
   async function apiRankH () {
-    await axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/gamer-ranking?difficulty=Hard&pageIdx=0&pageSize=3`).then(res => {
+    await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/gamer-ranking?difficulty=Hard&pageIdx=0&pageSize=3`).then(res => {
       let arr = res.data.contents
       setHard(
         arr.map((item, idx) => {
