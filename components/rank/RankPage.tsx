@@ -1,16 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { Router } from "react-router-dom";
 import styled from "styled-components";
-
-interface pro {
-  gamerId : number,
-  gameId : number,
-  name : string,
-  ranking : number,
-  time : number
-}
 
 export default function RankPage () {
   const [diff, setDiff] = useState('Easy')
@@ -81,7 +73,7 @@ export default function RankPage () {
         time = Math.floor(time/60);
         let min : number = time
         return (
-          <RankItem key={rank} rankes={rank} value={item.gameId} onClick={LinkToGame}>
+          <RankItem key={rank} rankes={rank} value={item.gameId} onClick={LinkToGame} >
             <RankNum rankes={rank}>{rank}</RankNum>
             <RankName>{name}</RankName>
             <RankTime>{min > 0 && `${min} 분`} {sec}.{milli} 초</RankTime>
@@ -211,10 +203,10 @@ const RankItem = styled.button<{rankes : number, ref?}>`
   
   width: 100%;
   height: 30px;
-  background-color: #433f3f;
+  background-color: #d7afaf;
 
   display: flex;
-  color : #fff;
+  color : #494747;
   border-radius: 5px;
 
   margin-bottom: 5px;

@@ -129,6 +129,8 @@ export default function GameSection (props : props) {
       setStartTime({milli : startDate.getMilliseconds(), sec : startDate.getSeconds(), min : startDate.getMinutes()})
       setGameStatus(37)
     } 
+    const now = new Date()
+    console.log(now.toLocaleString())
     if (postObj.isMine === undefined) {
       let tmpArr= arr.slice()
       let openArr : string[] = []
@@ -510,6 +512,7 @@ export default function GameSection (props : props) {
     let tmpObj = {...postObj};
     delete tmpObj.isMine
 
+
     setPostObj({...tmpObj, nearbyMines : tmpArMines, steps : JSON.stringify(steps)})
 
   }, [suc])
@@ -527,13 +530,12 @@ export default function GameSection (props : props) {
         <GameBox width={width} height={height}>
           {arr !== undefined && mines}
         </GameBox>
-      
       }
       <FailBox condition={fail}> 실패 ~
         <RetryButton onClick={reTry} >다시하기</RetryButton>
       </FailBox>
       <SucessBox condition={suc}> 성공 ~
-        <RetryButton onClick={reTry} >다시하기</RetryButton>
+        <RetryButton onClick={reTry} style={{width : 200}} >다시하기 {`&`} 기록 전송 </RetryButton>
       </SucessBox>
 
     </GameContainer>

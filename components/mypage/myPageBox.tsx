@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from 'next/router';
+import { tmpdir } from "os";
 
 export default function MyPage () {
   const [listItems, setListItems] = useState<JSX.Element>()
@@ -24,21 +25,25 @@ export default function MyPage () {
           const createdAt : string = items[0] 
           const difficulty : string = items[1]
           const gameId : string = items[3]
+          let par : number =  +Date.parse(createdAt)
 
-          const splitWithT = createdAt.split('T');
-          const splitWithDate = splitWithT[0].split('-')
-          const Hour = splitWithT[1].split(':')[0]
-          const Minute = splitWithT[1].split(':')[1]
+          let gap = new Date()
+          let milliGap = gap.getTimezoneOffset()*60*1000;          
+          par -= milliGap
+          let local = new Date(par)
+          const dateString = local.toLocaleString()
 
+          let dateArr = dateString.split(' ')
+
+          let timeArr = dateArr[4].split(':')
 
           return (
-            <GameButton key={gameId} value={gameId} onClick={goToGame}>{'< '} {splitWithDate[0]}년 {splitWithDate[1]}월 {splitWithDate[2]}일 {Hour}시 {Minute}분 {'>'} 　　난이도 : {difficulty} </GameButton>
+            <GameButton key={gameId} value={gameId} onClick={goToGame}>{'< '} {dateArr[0].slice(0, -1)}년 {dateArr[1].slice(0, -1)}월 {dateArr[2].slice(0, -1)}일 {dateArr[3] === '오후' ? +timeArr[0] + 12 : timeArr[0]}시 {timeArr[1]}분 {'>'} 　　난이도 : {difficulty} </GameButton>
           )
         })
 
         setListItems(lists)
 
-        console.log(list)
      
       }).catch(() => {
         console.log('err')
@@ -127,8 +132,7 @@ export default function MyPage () {
   return (
     <MyPageSection>
       <PageInfo >나의과거게임</PageInfo>
-      <MyPageItem char={'game'}>
-        
+      <MyPageItem char={'game'}>       
         {listItems}
       </MyPageItem>
       <PageInfo>나의 업적</PageInfo>
@@ -157,7 +161,7 @@ const MyPageSection = styled.section`
   position : relative;
   left : 50%;
   transform: translateX(-50%);
-  top : 30px;
+  top : 10px;
 
   display : flex;
   flex-direction: column;
@@ -171,11 +175,11 @@ const PageInfo = styled.p`
 
 const MyPageItem = styled.div<{char : string}>`
   width : 400px;
-  height : ${props => props.char === 'game' ? '320px' : '150px'};
+  height : ${props => props.char === 'game' ? '310px' : '150px'};
   border : 2px solid #3399c5;
   border-radius: 20px;
 
-  padding: 20px;
+  padding: 15px;
 
   position: relative;
   top : 0px;

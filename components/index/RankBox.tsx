@@ -4,12 +4,12 @@ import styled from "styled-components";
 import axios from "axios";
 
 export default function RankBox () {
-  const [firstArr, setFirstArr] = useState<{ gamerId : number,
-    gameId : number,
-    name : string,
-    ranking : number,
-    time : number}[]>
-  ([])
+  // const [firstArr, setFirstArr] = useState<{ gamerId : number,
+  //   gameId : number,
+  //   name : string,
+  //   ranking : number,
+  //   time : number}[]>
+  // ([])
 
   const [easy, setEasy] = useState<JSX.Element[]>([])
   const [medium, setMedium] = useState<JSX.Element[]>([])
@@ -157,14 +157,14 @@ const RankItem = styled.button<{rankes : number, ref?}>`
   background-color: #433f3f;
 
   display: flex;
-  color : #fff;
+  color : #494747;
   border-radius: 5px;
 
   margin-bottom: 5px;
 
   cursor: pointer;
 
-
+  overflow: hidden;
   :hover {
     overflow: hidden;
     color : black
@@ -192,7 +192,7 @@ const RankName = styled.div`
 
   padding-top: 5px;
 
-  font-size: 14px;
+  font-size: 12px;
   text-align: left;
 
   position: relative;
@@ -208,7 +208,8 @@ const RankTime = styled.div`
 
   padding-top: 5px;
 
-  font-size: 14px;
+  font-size: 10px;
+  font-weight: 900;
   text-align: left;
 
   position: relative;
