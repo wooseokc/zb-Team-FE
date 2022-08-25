@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import { DiffContext } from "../../src/store/diff";
+import { debounce } from "lodash";
 
 export default function RankPage () {
   const rankDiff = useContext(DiffContext).diff.diff
@@ -18,6 +19,7 @@ export default function RankPage () {
     ranking : number,
     time : number}[]>
   ([])
+
 
   async function apiRank () {
     await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/gamer-ranking?difficulty=${diff}&pageIdx=${page}&pageSize=15`).then(res => {
@@ -94,9 +96,16 @@ export default function RankPage () {
     setMorePage(true)
   }
 
-  const pageClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setPage(p => p + 1)
-  }
+  const scrollCheck = debounce((e: any) => {
+    const target = e.target.scrollHeight - e.target.clientHeight
+    const scroll = e.target.scrollTop
+
+    
+
+    if (target - scroll <=30 && morePage) {
+      setPage(p => p + 1)
+    }
+  },300)
 
   const LinkToGame = (e: React.MouseEvent<HTMLButtonElement>) => {
     router.push(`/info/mylastgame/${e.currentTarget.value}`)
@@ -118,9 +127,8 @@ export default function RankPage () {
         <RadioLable htmlFor="Hard">고급</RadioLable>
       </div>
       </DiffSelec>
-      <RankBox>
+      <RankBox onScroll={scrollCheck}>
         {rankEle}
-        {(morePage && rankArr.length >= 14) && <MoreItem onClick={pageClick}>+</MoreItem>}
       </RankBox>
     </RankSection>
   )

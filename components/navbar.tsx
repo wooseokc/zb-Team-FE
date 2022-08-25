@@ -15,6 +15,8 @@ export default function Navbar() {
     if (localStorage.getItem('accessToken')) {
       setTokenIs(true)
       token = localStorage.getItem('accessToken');
+    } else if (localStorage.getItem('accessToken') === 'undefined') {
+      setTokenIs(false)
     } else {
       setTokenIs(false)
     }
@@ -22,7 +24,6 @@ export default function Navbar() {
       setAuthToken(token)
     }
 
-    console.log('login check')
   })
 
 
@@ -32,7 +33,7 @@ export default function Navbar() {
       "refreshToken": localStorage.getItem('refreshToken')
     }
     console.log(JSON.stringify(data))
-    await axios.post('https://minesweeper.hanjoon.dev/minesweeper/auth/logout', JSON.stringify(data), {
+    await axios.post('https://minesweeper.hanjoon.dev/minesweeper/auth/logout', data, {
       headers : {'content-type': 'application/json'},
     }).then((res)=> {
       console.log(res)

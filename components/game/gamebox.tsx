@@ -125,7 +125,6 @@ export default function GameSection (props : props) {
       setStartTime({milli : startDate.getMilliseconds(), sec : startDate.getSeconds(), min : startDate.getMinutes()})
       setGameStatus(37)
     } 
-    const now = new Date()
     if (postObj.isMine === undefined) {
       let tmpArr= arr.slice()
       let openArr : string[] = []
