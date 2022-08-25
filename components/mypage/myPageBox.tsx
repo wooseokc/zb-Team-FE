@@ -3,15 +3,51 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from 'next/router';
-import { tmpdir } from "os";
 
 export default function MyPage () {
-  const [listItems, setListItems] = useState<JSX.Element>()
+  const [listItems, setListItems] = useState<JSX.Element[]>()
+  const [loginStatus, setLoginStatus] = useState(true)
+  const [carrer, setCarrer] = useState(
+    {
+      easyCleared : 0,
+      easyRank: 0,
+      easyTime: 0,
+      hardCleared: 0,
+      hardRank: 0,
+      hardTime: 0,
+      mediumCleared: 0,
+      mediumRank: 0,
+      mediumTime: 0
+    }
+  )
   const router = useRouter()
   useEffect(() => {
+    if (!localStorage.getItem('accessToken')) {
+      setLoginStatus(false)
+    }
+    let gamerId = sessionStorage.getItem('gamerId')
+    if (sessionStorage.getItem('gamerId') && loginStatus) {
+      axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/stat/${gamerId}`).then(res => {
+        console.log('yeah')
+        console.log(res.data)
+        let data = res.data
+
+        setCarrer({
+          easyCleared : data.easyCleared,
+          easyRank: data.easyRank,
+          easyTime: data.easyTime,
+          hardCleared: data.hardCleared,
+          hardRank: data.hardRank,
+          hardTime: data.hardTime,
+          mediumCleared: data.mediumCleared,
+          mediumRank: data.mediumRank,
+          mediumTime: data.mediumTime
+        })
+      })
+    }
+
     let list; 
     if (sessionStorage.getItem('gamerId')) {
-      let gamerId = sessionStorage.getItem('gamerId')
       axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/list/${gamerId}`).then(res => {
         console.log(res.data)
 
@@ -21,7 +57,7 @@ export default function MyPage () {
           list[i] = tmpArr.slice()
         }
 
-        let lists = list.map((items, idx) => {
+        let lists : JSX.Element[] = list.map((items, idx) => {
           const createdAt : string = items[0] 
           const difficulty : string = items[1]
           const gameId : string = items[3]
@@ -73,78 +109,56 @@ export default function MyPage () {
     console.log(localStorage)
   }
 
-  const onSubmit2 = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log('wait')
-    await axios.get('https://minesweeper.hanjoon.dev/minesweeper/gamer/email/abcd@naver.com').then(res => {
-     
-      console.log(res.data)
-   
-    })
-  }
-
-  const onPost = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log('wait')
-    const data = {
-      email : "abcdeeeee@naver.com",
-      name : '테스트',
-      password : '1234'
-    }
-    await axios.post(`https://minesweeper.hanjoon.dev/minesweeper/gamer`, (data)).then(res => {
-     
-      console.log(res.data)
-   
-    }).catch(() => {
-      console.log('err')
-    })
-  }
-
   const clearStore = async (e: React.MouseEvent<HTMLButtonElement>) => {
     localStorage.clear()
     sessionStorage.clear()
   }
-  const ListGet = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    let gamerId = sessionStorage.getItem('gamerId')
-    console.log(gamerId)
-
-    await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/list/${gamerId}`).then(res => {
-     
-      console.log(res.data)
-   
-    }).catch(() => {
-      console.log('err')
-    })
-  }
 
 
-  const GameGet = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    let gamerId = sessionStorage.getItem('gamerId')
-    console.log(gamerId)
-
-    await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/15`).then(res => {
-     
-      console.log(res.data)
-   
-    }).catch(() => {
-      console.log('err')
-    })
-  }
 
   return (
     <MyPageSection>
       <PageInfo >나의과거게임</PageInfo>
       <MyPageItem char={'game'}>       
         {listItems}
+        {(!loginStatus) && 
+          <WaringText>로그인을 안하면 브라우저를 종료하기 전까지의 결과만 다시 볼 수 있습니다</WaringText>
+        }
       </MyPageItem>
-      <PageInfo>나의 업적</PageInfo>
-      <MyPageItem char ={'carrer'}>
-        
-        <button onClick={onSubmit}>stroge</button>
-        <button onClick={onSubmit2}>get</button>
-        <button onClick={onPost}>post</button>
+      <PageInfo>나의 업적
+      <button onClick={onSubmit}>stroge</button>
         <button onClick={clearStore}>clear</button>
-        <button onClick={ListGet}>List</button>
-        <button onClick={GameGet}>gmaeGet</button>
 
+      </PageInfo>
+      <MyPageItem char ={'carrer'}>
+        {loginStatus ?
+          <>
+            <CarrerBox>초급
+              <InfoBox>
+                <CarrerItem>통산 성공 : {carrer.easyCleared}</CarrerItem>
+                <CarrerItem>최고 기록 : {Math.floor(carrer.easyTime / 60000)}분 {((carrer.easyTime % 60000)/1000).toFixed(3)}초 </CarrerItem>
+                <CarrerItem>최고 랭킹 : {carrer.easyRank} </CarrerItem>
+              </InfoBox>
+            </CarrerBox>
+            <CarrerBox>중급
+              <InfoBox>
+                <CarrerItem>통산 성공 : {carrer.mediumCleared}</CarrerItem>
+                <CarrerItem>최고 기록 : {Math.floor(carrer.mediumTime / 60000)}분 {((carrer.mediumTime % 60000)/1000).toFixed(3)}초</CarrerItem>
+                <CarrerItem>최고 랭킹 : {carrer.mediumRank} </CarrerItem>
+              </InfoBox>
+            </CarrerBox>
+            <CarrerBox>고급
+              <InfoBox>
+                <CarrerItem>통산 성공 : {carrer.hardCleared} </CarrerItem>
+                <CarrerItem>최고 기록 : {Math.floor(carrer.hardTime / 60000)}분 {((carrer.hardTime % 60000)/1000).toFixed(3)}초</CarrerItem>
+                <CarrerItem>최고 랭킹 : {carrer.hardRank} </CarrerItem>
+              </InfoBox>
+            </CarrerBox>
+          </>
+         :
+          <WaringText2>로그인해야 볼 수 있어요</WaringText2>
+         }
+ 
       </MyPageItem>
 
 
@@ -203,4 +217,48 @@ const GameButton = styled.button`
   :hover {
     background: #215c6c;
   }
+`
+
+const CarrerBox = styled.div`
+  width : 90%;
+  height : 100px;
+  font-size : 15px ;
+  font-weight: bold;
+
+  text-align: center;
+
+  margin-bottom: 10px;
+
+`
+
+const InfoBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -3px;
+  
+  padding: 2px;
+`
+
+const CarrerItem = styled.div`
+  font-size: 13px;
+`
+
+const WaringText = styled.div`
+  font-size: 10px;
+  color : #de3535;
+
+  position: absolute;
+  top : 0px;
+`
+const WaringText2 = styled.div`
+  font-size: 20px;
+  color : #de3535;
+
+  position: absolute;
+  top : 70px;
 `
