@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
+import { DiffContext } from "../../src/store/diff";
 
 export default function RankPage () {
-  const [diff, setDiff] = useState('Easy')
+  const rankDiff = useContext(DiffContext).diff.diff
+  const [diff, setDiff] = useState(rankDiff)
   const [page, setPage] = useState(0)
   const [morePage, setMorePage] = useState(true)
   const [rankEle, setRankEle] = useState<JSX.Element[]>()
@@ -19,7 +21,6 @@ export default function RankPage () {
 
   async function apiRank () {
     await axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/gamer-ranking?difficulty=${diff}&pageIdx=${page}&pageSize=15`).then(res => {
-      console.log(res.data)
 
       if (!rankArr[0] && !res.data.contents[0]) {
 
@@ -54,10 +55,6 @@ export default function RankPage () {
     apiRank()
 
   }, [page])
-
-  useEffect(() => {
-    console.log(diff)
-  })
 
 
   useEffect(() => {
@@ -109,15 +106,15 @@ export default function RankPage () {
     <RankSection>
       <DiffSelec>
       <div>
-        <GameRadio onClick={boxClick} type={'radio'} id='Easy' name="game" defaultChecked></GameRadio>
+        <GameRadio onClick={boxClick} type={'radio'} id='Easy' name="game" defaultChecked={rankDiff === 'Easy' ? true : false}></GameRadio>
         <RadioLable htmlFor="Easy" >초급</RadioLable>     
       </div>
       <div>
-        <GameRadio onClick={boxClick} type={'radio'} id='Medium' name="game"></GameRadio>
+        <GameRadio onClick={boxClick} type={'radio'} id='Medium' name="game" defaultChecked={rankDiff === 'Medium' ? true : false}></GameRadio>
         <RadioLable htmlFor="Medium">중급</RadioLable>
       </div>
       <div>
-        <GameRadio onClick={boxClick} type={'radio'} id='Hard' name="game"></GameRadio>
+        <GameRadio onClick={boxClick} type={'radio'} id='Hard' name="game" defaultChecked={rankDiff === 'Hard'  ? true : false}></GameRadio>
         <RadioLable htmlFor="Hard">고급</RadioLable>
       </div>
       </DiffSelec>

@@ -28,8 +28,6 @@ export default function MyPage () {
     let gamerId = sessionStorage.getItem('gamerId')
     if (sessionStorage.getItem('gamerId') && loginStatus) {
       axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/stat/${gamerId}`).then(res => {
-        console.log('yeah')
-        console.log(res.data)
         let data = res.data
 
         setCarrer({
@@ -49,7 +47,6 @@ export default function MyPage () {
     let list; 
     if (sessionStorage.getItem('gamerId')) {
       axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/list/${gamerId}`).then(res => {
-        console.log(res.data)
 
         list = new Array(res.data.gameList.length)
         for (let i = 0; i < list.length ; i ++) {
@@ -82,14 +79,9 @@ export default function MyPage () {
 
      
       }).catch(() => {
-        console.log('err')
+        console.error('err')
       })
-  
-  
-    } else {
-      console.log('no Id')
-    }
-
+    } 
   }, [])
 
 

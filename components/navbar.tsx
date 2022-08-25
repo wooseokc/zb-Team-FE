@@ -21,6 +21,8 @@ export default function Navbar() {
     if (token !== null) {
       setAuthToken(token)
     }
+
+    console.log('login check')
   })
 
 

@@ -56,10 +56,6 @@ export default function GameSection (props : props) {
     let mineCount = howManyMines; // 지뢰 개수
     setGameStatus(null)
 
-    if (sessionStorage.getItem('gamerId')) {
-      console.log(sessionStorage.getItem('gamerId'))
-    }
-
     while (mineCount > 0) {
       let a = Math.floor(Math.random()*total)  
 
@@ -130,7 +126,6 @@ export default function GameSection (props : props) {
       setGameStatus(37)
     } 
     const now = new Date()
-    console.log(now.toLocaleString())
     if (postObj.isMine === undefined) {
       let tmpArr= arr.slice()
       let openArr : string[] = []
@@ -286,7 +281,6 @@ export default function GameSection (props : props) {
             flagCount ++;
           }
         }
-        console.log(flagCount)
         if (tmpArr[targetIndex][3] === flagCount && tmpArr[targetIndex][3] !== 0) {
           if (Number(target.dataset.t) % width === 0) {
             aroundMine(Number(target.dataset.t)-width)
@@ -381,9 +375,7 @@ export default function GameSection (props : props) {
 
     async function resultPost () {
       await axios.post('https://minesweeper.hanjoon.dev/minesweeper/game', postObj).then(res => {
-        console.log(res)
         let gamerResId : number = res.data.gamerId;
-        console.log(gamerResId)
         if (postObj.gamerId !== gamerResId) {
           sessionStorage.setItem('gamerId', String(gamerResId))
           setPostObj({...postObj, gamerId : gamerResId})
@@ -392,7 +384,6 @@ export default function GameSection (props : props) {
     }
 
     if (suc) {
-      console.log(JSON.stringify(postObj))
       resultPost()
     }
 

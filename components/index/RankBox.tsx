@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Link from 'next/link'
 import styled from "styled-components";
 import axios from "axios";
+import { DiffContext } from "../../src/store/diff";
 
 export default function RankBox () {
   // const [firstArr, setFirstArr] = useState<{ gamerId : number,
@@ -15,12 +16,10 @@ export default function RankBox () {
   const [medium, setMedium] = useState<JSX.Element[]>([])
   const [hard, setHard] = useState<JSX.Element[]>([])
 
-
+  const rankdispatch : any = useContext(DiffContext).dispatch
   
-
   async function apiRankE () {
     await axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/gamer-ranking?difficulty=Easy&pageIdx=0&pageSize=3`).then(res => {
-      console.log(res.data.contents)
       let arr = res.data.contents
       setEasy(
         arr.map((item, idx) => {
@@ -45,7 +44,6 @@ export default function RankBox () {
   }
   async function apiRankM () {
     await axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/gamer-ranking?difficulty=Medium&pageIdx=0&pageSize=3`).then(res => {
-      console.log(res.data.contents)
       let arr = res.data.contents
       setMedium(
         arr.map((item, idx) => {
@@ -70,7 +68,6 @@ export default function RankBox () {
   }
   async function apiRankH () {
     await axios.get(`https://minesweeper.hanjoon.dev:443/msv2/game/gamer-ranking?difficulty=Hard&pageIdx=0&pageSize=3`).then(res => {
-      console.log(res.data.contents)
       let arr = res.data.contents
       setHard(
         arr.map((item, idx) => {
@@ -100,27 +97,41 @@ export default function RankBox () {
     apiRankH()
   },[])
 
-
+  const DivClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.currentTarget.id === 'Easy') {
+      rankdispatch({type : 'selectDiff', text : 'Easy'})
+    } else if (e.currentTarget.id === 'Medium') {
+      rankdispatch({type : 'selectDiff', text : 'Medium'})
+    } else if (e.currentTarget.id === 'Hard') {
+      rankdispatch({type : 'selectDiff', text : 'Hard'})
+    }
+  }
 
   return (
     <>
-      <Link href="/board/rank">
+      
         <Box>
           <WordBox>명예의 전당</WordBox>
           초급
-          <RankBoxss>
-            {easy}
-          </RankBoxss>
+          <Link href="/board/rank">
+            <RankBoxss onClick={DivClick} id={'Easy'}>
+              {easy}
+            </RankBoxss>
+          </Link>
           중급
-          <RankBoxss>
-            {medium}
-          </RankBoxss>
+          <Link href="/board/rank">
+            <RankBoxss onClick={DivClick} id={'Medium'}>
+              {medium}
+            </RankBoxss>
+          </Link>
           고급
-          <RankBoxss>
-            {hard}
-          </RankBoxss>
+          <Link href="/board/rank">
+            <RankBoxss onClick={DivClick} id={'Hard'}>
+              {hard}
+            </RankBoxss>
+          </Link>
         </Box>
-      </Link>
+      
     </>
 
   )
@@ -136,7 +147,6 @@ const Box = styled.section`
 
   text-align: center;
 
-  cursor: pointer;
 
   position: relative;
   top: 50px;
@@ -173,6 +183,8 @@ const RankItem = styled.button<{rankes : number, ref?}>`
   ${props => props.rankes === 1 && {backgroundColor : '#ffd700', fontWeight : 600}}
   ${props => props.rankes === 2 && {backgroundColor : '#c0c0c0', fontWeight : 600}}
   ${props => props.rankes === 3 && {backgroundColor : '#be6565db', fontWeight : 600}}
+
+  pointer-events: none;
 `
 
 const RankNum = styled.div<{rankes : number}>`
@@ -216,7 +228,7 @@ const RankTime = styled.div`
   left : 40px;
 `
 
-const RankBoxss = styled.div`
+const RankBoxss = styled.div<{value?}>`
   width: 80%;
   height: 85px;
 
@@ -230,7 +242,7 @@ const RankBoxss = styled.div`
 
   padding: 5px;
 
-
+  cursor: pointer;
 
   font-size: 10px;
   margin-bottom: 3px;
