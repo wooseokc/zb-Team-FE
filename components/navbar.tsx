@@ -25,6 +25,38 @@ export default function Navbar() {
     }
 
   })
+  /** */
+  useEffect(() => {
+    const token = {
+      accessToken : localStorage.getItem('accessToken'),
+      refreshToken : localStorage.getItem('refreshToken')
+    }
+    async function reissue() {
+      await axios.post('https://minesweeper.hanjoon.dev/minesweeper/auth/reissue', JSON.stringify(token), {
+        headers : {'content-type': 'application/json'},
+      })
+      .then(res => {
+        
+          let data = res.data;
+          localStorage.setItem('accessToken', data.accessToken)
+          localStorage.setItem('refreshToken', data.refreshToken)
+          sessionStorage.setItem('gamerId', data.gamerId)
+      })
+      .catch(err => {
+        console.log(err.response)
+        let error = err.response
+        if (error.status === 400) {
+          localStorage.clear()
+          sessionStorage.clear()
+        }
+      })
+    }
+
+    const refresh = localStorage.getItem('refreshToken')
+    if (refresh) {
+      reissue()
+    }
+  }, [])
 
 
   const logOut = async (e: React.MouseEvent<HTMLButtonElement>) => {

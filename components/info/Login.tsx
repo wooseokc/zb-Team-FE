@@ -31,36 +31,36 @@ export default function Login() {
             .post('https://minesweeper.hanjoon.dev/minesweeper/auth/login', loginPayload)
             .then((response) => {
               const data = response.data;
-  
-              console.log(data)
-  
-  
-              localStorage.setItem('accessToken', data.accessToken)
-              localStorage.setItem('refreshToken', data.refreshToken)
-              sessionStorage.setItem('gamerId', String(data.gamerId))
-              sessionStorage.setItem('email', loginId);
-  
-              console.log(response.data.gamerId)
-              // JWT 토큰 로컬에 저장
-  
-              setAuthToken(data.accessToken);
-  
-              // window.location.href = '/';
-              router.push('/');
-            }).catch(e => {
-              console.log(e.response);
-              // if (e.response.data.error === 'Unauthorized') {
-              //   sessionStorage.setItem('email', loginId);
-              //   router.push('/info/emailAuthPage')
-              // } else {
-              //   router.push('/')
-              // }
-              setError('ID와 PASSWORD를 확인 해주세요');
+
+              if (data.errorCode === "USER_NOT_FOUND") {
+                setError('ID와 PASSWORD를 확인 해주세요');
+              } else if (data.errorCode === "NOT_AUTHENTICATED_EMAIL") {
+                sessionStorage.setItem('email', loginId);
+                router.push('/info/emailAuthPage')
+              }
+              else {
+                localStorage.setItem('accessToken', data.accessToken)
+                localStorage.setItem('refreshToken', data.refreshToken)
+                sessionStorage.setItem('gamerId', String(data.gamerId))
+                sessionStorage.setItem('email', loginId);
+
+                // JWT 토큰 로컬에 저장
+
+                setAuthToken(data.accessToken);
+                router.push('/');
+              }
             })
-
-        
+            // .catch(e => {
+            //   console.log(e.response);
+            //   if (e.response.data.error === 'Unauthorized') {
+            //     sessionStorage.setItem('email', loginId);
+            //     router.push('/info/emailAuthPage')
+            //   } else {
+            //     router.push('/')
+            //   }
+            //   setError('ID와 PASSWORD를 확인 해주세요');
+            // })
       } 
-
   }
 
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
