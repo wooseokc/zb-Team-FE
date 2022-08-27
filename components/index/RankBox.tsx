@@ -302,7 +302,7 @@ const WordBox = styled.div<{width : number}>`
   left: 50%;
   transform: translateX(-50%);
   top : ${props => props.width >= 1000 ? `-${props.width/40}px` : `-20px`};
-  ${props => props.width >= 3000 && {top : -100}};
+  ${props => props.width >= 3000 && {top : -60}};
   ${props => (props.width < 3000 && props.width >= 1250 )&& {top :`-${props.width/60}px`}};
   ${props => props.width < 1250 && {top : -30}};
 
