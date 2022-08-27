@@ -79,7 +79,6 @@ export default function MyPage () {
 
      
       }).catch(() => {
-        console.error('err')
       })
     } 
   }, [])

@@ -2,13 +2,19 @@
 import Link from 'next/link'
 import Image from 'next/image'
 // import Bomb from './images/free-icon-bomb.png'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import { setAuthToken } from './info/_helpers/setAuthToken'
+import { DiffContext } from '../src/store/diff'
+import { debounce } from 'lodash'
 
 export default function Navbar() {
   const [tokenIs, setTokenIs] = useState<boolean>(false) 
+  const widthDispatch : any = useContext(DiffContext).dispatch
+  const storeWidth : any = useContext(DiffContext).diff.width
+
+  // const rankDiff = useContext(DiffContext).diff.diff
 
   useEffect(() => {
     let token: string | null = null
@@ -24,6 +30,12 @@ export default function Navbar() {
       setAuthToken(token)
     }
 
+    const widthHandle = debounce(() => {
+      widthDispatch({type : 'changeWidth', number : window.innerWidth})
+
+    }, 100)
+    console.log(storeWidth)
+    window.addEventListener('resize' , widthHandle)
   })
   /** */
   useEffect(() => {
@@ -48,6 +60,7 @@ export default function Navbar() {
         if (error.status === 400) {
           localStorage.clear()
           sessionStorage.clear()
+          setTokenIs(false)
         }
       })
     }
@@ -56,6 +69,7 @@ export default function Navbar() {
     if (refresh) {
       reissue()
     }
+    widthDispatch({type : 'changeWidth', number : window.innerWidth})
   }, [])
 
 
@@ -79,39 +93,42 @@ export default function Navbar() {
 
   return (
     <>
-    <NavBox>
+    <NavBox width={storeWidth}>
       <Link href="/">
-        <NavButton char='logo'>
+        <NavButton width={storeWidth} char='logo'>
           <img src='/free-icon-bomb.png' alt='bomlogo' width='40' height="40"/>
         </NavButton>
       </Link>
       <NavListBox>
         <Link href="/board/list">
-          <NavButton>자유게시판</NavButton>
+          <NavButton width={storeWidth}>자유게시판</NavButton>
         </Link>
         <Link href="/board/rank">
-          <NavButton>랭킹보기</NavButton>
+          <NavButton width={storeWidth}>랭킹보기</NavButton>
         </Link>
         <Link href="/info/mypage">
-          <NavButton>마이페이지</NavButton>
+          <NavButton width={storeWidth}>마이페이지</NavButton>
         </Link>
       </NavListBox>
-      {tokenIs ? <LogOutButton onClick={logOut}> Log out</LogOutButton> : 
+      {tokenIs ? <LogOutButton width={storeWidth} onClick={logOut}> Log out</LogOutButton> : 
       <Link href="/info/loginPage">
-        <LoginButton>Log in</LoginButton>
+        <LoginButton width={storeWidth}>Log in</LoginButton>
       </Link> }
     </NavBox>
     </>
   )
 }
 
-const NavBox = styled.nav`
-  width : 50%;
-  max-width: 900px;
-  height : 40px;
-
+const NavBox = styled.nav<{width : number}>`
+  width : ${props => `${props.width/2.5}px`};
+  min-width: 500px;
+  max-width: 1000px;
+  height: ${props => `${props.width/45}px`};
+  min-height: 40px;
+  max-height: 80px;
   position : relative;
-  margin: 0 auto;
+  left: 50%;
+  transform: translateX(-50%);
 
   display : flex;
   align-items: center;
@@ -119,7 +136,7 @@ const NavBox = styled.nav`
 
 const NavListBox = styled.div`
   width : 100%;
-  height : 40px;
+  height: 100%;
 
   display : flex;
   justify-content: space-evenly;
@@ -127,14 +144,16 @@ const NavListBox = styled.div`
 
 `
 
-const NavButton = styled.button<{char? : string}>`
+const NavButton = styled.button<{char? : string, width : number}>`
   background: inherit ; box-shadow:none;  padding:0; overflow:visible; cursor:pointer;
 
-  width : 90px;
+  width : 23%;
 
   border : 2px solid #e6e6e6;
   border-radius: 9px;
   font-weight: bold;
+
+  font-size: ${props => props.width <= 3000 ? `${props.width/110}px` : `30px`};
 
   display : block;
 
@@ -148,18 +167,19 @@ const NavButton = styled.button<{char? : string}>`
   }
 `
 
-const LoginButton = styled.button`
+const LoginButton = styled.button<{width : number}>`
   background: inherit ; box-shadow:none; padding:0; overflow:visible; cursor:pointer;
 
+  width: 15%;
   min-width : 70px;
-  height : 40px;
-
+  height: 100%;
   border : 0;
   border-radius: 6px;
   outline: 0;
   color: white;
   font-weight: bold;
-  font-size: 14px;
+  font-size: ${props => props.width <= 3000 ? `${props.width/110}px` : `30px`};
+  
   
   background-color: #49add8;
 
@@ -170,7 +190,7 @@ const LoginButton = styled.button`
   }
 `
 
-const LogOutButton = styled.button`
+const LogOutButton = styled.button<{width : number}>`
   background: inherit ; box-shadow:none; padding:0; overflow:visible; cursor:pointer;
 
   min-width : 70px;
@@ -179,12 +199,13 @@ const LogOutButton = styled.button`
   border : 0;
   border-radius: 6px;
   outline: 0;
+  font-size: ${props => props.width <= 3000 ? `${props.width/110}px` : `30px`};
   
   padding: 5px;
   
   color: white;
   font-weight: bold;
-  font-size: 14px;
+  
   
   background-color: #49add8;
 

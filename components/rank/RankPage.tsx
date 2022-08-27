@@ -115,7 +115,7 @@ export default function RankPage () {
     <RankSection>
       <DiffSelec>
       <div>
-        <GameRadio onClick={boxClick} type={'radio'} id='Easy' name="game" defaultChecked={rankDiff === 'Easy' ? true : false}></GameRadio>
+        <GameRadio onClick={boxClick} type={'radio'} id='Easy' name="game" defaultChecked={rankDiff === 'Easy' || !rankDiff ? true : false}></GameRadio>
         <RadioLable htmlFor="Easy" >초급</RadioLable>     
       </div>
       <div>
