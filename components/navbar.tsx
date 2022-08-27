@@ -11,8 +11,8 @@ import { debounce } from 'lodash'
 
 export default function Navbar() {
   const [tokenIs, setTokenIs] = useState<boolean>(false) 
-  const widthDispatch : any = useContext(DiffContext).dispatch
-  const storeWidth : any = useContext(DiffContext).diff.width
+  const widthDispatch : any = useContext(DiffContext).Widthdispatch
+  const storeWidth : any = useContext(DiffContext).width.width
 
   // const rankDiff = useContext(DiffContext).diff.diff
 

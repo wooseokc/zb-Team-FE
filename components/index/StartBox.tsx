@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { DiffContext } from "../../src/store/diff";
 
 export default function Start () {
-  let storeWidth : number = useContext(DiffContext).diff.width
+  let storeWidth : number = useContext(DiffContext).width.width
   return (
     <StartSection width={storeWidth}>
       <GameModeBox  width={storeWidth}>

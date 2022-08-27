@@ -8,7 +8,8 @@ import { debounce } from "lodash";
 
 export default function RankPage () {
   const rankDiff = useContext(DiffContext).diff.diff
-  let storeWidth : number = useContext(DiffContext).diff.width
+  console.log(rankDiff)
+  let storeWidth : number = useContext(DiffContext).width.width
   const [diff, setDiff] = useState(rankDiff)
   const [page, setPage] = useState(0)
   const [morePage, setMorePage] = useState(true)
@@ -116,7 +117,7 @@ export default function RankPage () {
     <RankSection width={storeWidth}>
       <DiffSelec>
       <div>
-        <GameRadio width={storeWidth} onClick={boxClick} type={'radio'} id='Easy' name="game" defaultChecked={rankDiff === 'Easy' || !rankDiff ? true : false}></GameRadio>
+        <GameRadio width={storeWidth} onClick={boxClick} type={'radio'} id='Easy' name="game" defaultChecked={rankDiff === 'Easy' ? true : false}></GameRadio>
         <RadioLable width={storeWidth} htmlFor="Easy" >초급</RadioLable>     
       </div>
       <div>

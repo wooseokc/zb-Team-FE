@@ -7,8 +7,7 @@ import { DiffContext } from "../../src/store/diff";
 
 export default function RankBox () {
 
-  let storeWidth : number = useContext(DiffContext).diff.width
-  const widthDispatch : any = useContext(DiffContext).dispatch
+  let storeWidth : number = useContext(DiffContext).width.width
   const [easy, setEasy] = useState<JSX.Element[]>([])
   const [medium, setMedium] = useState<JSX.Element[]>([])
   const [hard, setHard] = useState<JSX.Element[]>([])
@@ -103,13 +102,10 @@ export default function RankBox () {
   const DivClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.currentTarget.id === 'Easy') {
       rankdispatch({type : 'selectDiff', text : 'Easy'})
-      rankdispatch({type : 'changeWidth', number : window.innerWidth})
     } else if (e.currentTarget.id === 'Medium') {
       rankdispatch({type : 'selectDiff', text : 'Medium'})
-      rankdispatch({type : 'changeWidth', number : window.innerWidth})
     } else if (e.currentTarget.id === 'Hard') {
       rankdispatch({type : 'selectDiff', text : 'Hard'})
-      rankdispatch({type : 'changeWidth', number : window.innerWidth})
     }
   }
 

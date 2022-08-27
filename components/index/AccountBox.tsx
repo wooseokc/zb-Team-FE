@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { DiffContext } from "../../src/store/diff";
 
 export default function AccountBox () {
-  let storeWidth : number = useContext(DiffContext).diff.width
+  let storeWidth : number = useContext(DiffContext).width.width
   return (
     <StyleSection width={storeWidth}>
       <Link href="/info/loginPage">
