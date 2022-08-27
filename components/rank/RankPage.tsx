@@ -8,6 +8,7 @@ import { debounce } from "lodash";
 
 export default function RankPage () {
   const rankDiff = useContext(DiffContext).diff.diff
+  let storeWidth : number = useContext(DiffContext).diff.width
   const [diff, setDiff] = useState(rankDiff)
   const [page, setPage] = useState(0)
   const [morePage, setMorePage] = useState(true)
@@ -72,10 +73,10 @@ export default function RankPage () {
         time = Math.floor(time/60);
         let min : number = time
         return (
-          <RankItem key={rank} rankes={rank} value={item.gameId} onClick={LinkToGame} >
-            <RankNum rankes={rank}>{rank}</RankNum>
-            <RankName>{name}</RankName>
-            <RankTime>{min > 0 && `${min} 분`} {sec}.{milli} 초</RankTime>
+          <RankItem width={storeWidth} key={rank} rankes={rank} value={item.gameId} onClick={LinkToGame} >
+            <RankNum  width={storeWidth} rankes={rank}>{rank}</RankNum>
+            <RankName  width={storeWidth}>{name}</RankName>
+            <RankTime  width={storeWidth}>{min > 0 && `${min} 분`} {sec}.{milli} 초</RankTime>
           </RankItem>
         )
       }))
@@ -112,19 +113,19 @@ export default function RankPage () {
   }
 
   return (
-    <RankSection>
+    <RankSection width={storeWidth}>
       <DiffSelec>
       <div>
-        <GameRadio onClick={boxClick} type={'radio'} id='Easy' name="game" defaultChecked={rankDiff === 'Easy' || !rankDiff ? true : false}></GameRadio>
-        <RadioLable htmlFor="Easy" >초급</RadioLable>     
+        <GameRadio width={storeWidth} onClick={boxClick} type={'radio'} id='Easy' name="game" defaultChecked={rankDiff === 'Easy' || !rankDiff ? true : false}></GameRadio>
+        <RadioLable width={storeWidth} htmlFor="Easy" >초급</RadioLable>     
       </div>
       <div>
-        <GameRadio onClick={boxClick} type={'radio'} id='Medium' name="game" defaultChecked={rankDiff === 'Medium' ? true : false}></GameRadio>
-        <RadioLable htmlFor="Medium">중급</RadioLable>
+        <GameRadio width={storeWidth} onClick={boxClick} type={'radio'} id='Medium' name="game" defaultChecked={rankDiff === 'Medium' ? true : false}></GameRadio>
+        <RadioLable width={storeWidth} htmlFor="Medium">중급</RadioLable>
       </div>
       <div>
-        <GameRadio onClick={boxClick} type={'radio'} id='Hard' name="game" defaultChecked={rankDiff === 'Hard'  ? true : false}></GameRadio>
-        <RadioLable htmlFor="Hard">고급</RadioLable>
+        <GameRadio width={storeWidth} onClick={boxClick} type={'radio'} id='Hard' name="game" defaultChecked={rankDiff === 'Hard'  ? true : false}></GameRadio>
+        <RadioLable width={storeWidth} htmlFor="Hard">고급</RadioLable>
       </div>
       </DiffSelec>
       <RankBox onScroll={scrollCheck}>
@@ -134,9 +135,13 @@ export default function RankPage () {
   )
 }
 
-const RankSection = styled.section`
-  width: 520px;
-  height: 600px;
+const RankSection = styled.section<{width: number}>`
+  width: ${props => `${props.width/2.4}px`};
+  height: ${props => `${props.width/2.1}px`};
+  min-width: 520px;
+  min-height: 600px;
+  max-width: 1071px;
+  max-height: 1224px;
 
 
   position: relative;
@@ -147,7 +152,7 @@ const RankSection = styled.section`
 
 const DiffSelec = styled.div`
   width: 80%;
-  height: 30px;
+  height: 5%;
 
   position: relative;
   left: 50%;
@@ -158,21 +163,37 @@ const DiffSelec = styled.div`
   justify-content: space-around;
 `
 
-const GameRadio = styled.input` 
+const GameRadio = styled.input<{width: number}>` 
   position: relative;
+  width: ${props => `${props.width/96}px`};
+  height: ${props => `${props.width/96}px`};
+  min-width: 13px;
+  min-height: 13px;
+  max-width: 26px;
+  max-height: 26px;
+
+
   top: 30%;
   transform: translateY(-50%);
 `
 
-const RadioLable = styled.label`
+const RadioLable = styled.label<{width: number}>`
   position: relative;
   top : 2px;
+
+
+  /* max-width: 26px;
+  max-height: 26px; */
+  font-size : 25px ;
+  ${props => props.width >= 3000 && {fontSize : 25}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {fontSize : `${props.width/90}px`}};
+  ${props => props.width < 1250 && {fontSize : 15}};
 
 `
 
 const RankBox = styled.div`
   width: 60%;
-  height: 450px;
+  height: 75%;
 
   border: 5px solid #49add8;
   border-radius: 10px;
@@ -202,12 +223,14 @@ const RankBox = styled.div`
 
 `
 
-const RankItem = styled.button<{rankes : number, ref?}>`
+const RankItem = styled.button<{rankes : number, width : number}>`
 
   border: none;
   
   width: 100%;
-  height: 30px;
+  min-height: 30px;
+  max-height: 62px;
+  height: ${props => `${props.width/41}px`};
   background-color: #d7afaf;
 
   display: flex;
@@ -228,24 +251,33 @@ const RankItem = styled.button<{rankes : number, ref?}>`
   ${props => props.rankes === 3 && {backgroundColor : '#be6565db', fontWeight : 900}}
 `
 
-const RankNum = styled.div<{rankes : number}>`
-  width: 25px;
-  height: 25px;
+const RankNum = styled.div<{rankes : number, width : number}>`
+  width: ${props => `${props.width/50}px`};
+  height: ${props => `${props.width/50}px`};
 
-  padding-top: 2px;
+  min-width: 25px;
+  min-height: 25px;
+
+  padding-top: ${props => `${props.width/400}px`};
 
   font-size: 20px;
+  ${props => props.width >= 3000 && {fontSize : 41}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {fontSize : `${props.width/62.5}px`}};
+  ${props => props.width < 1250 && {fontSize : 20}};
   text-align: center;
 
   ${props => (props.rankes === 1 ||  props.rankes === 2 ||  props.rankes === 3) && {paddingTop : '0px'}}
 `
-const RankName = styled.div`
-  width: 100px;
-  height: 25px;
-
-  padding-top: 5px;
+const RankName = styled.div<{width : number}>`
+  width: ${props => `${props.width/12.5}px`};;
+  min-width: 100px;
+  max-width: 210px;
+  padding-top: ${props => `${props.width/280}px`};
 
   font-size: 14px;
+  ${props => props.width >= 3000 && {fontSize : 28.5}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {fontSize : `${props.width/90}px`}};
+  ${props => props.width < 1250 && {fontSize : 14}};
   text-align: left;
 
   position: relative;
@@ -254,18 +286,25 @@ const RankName = styled.div`
 
 `
 
-const RankTime = styled.div`
-  width: 100px;
-  height: 25px;
+const RankTime = styled.div<{width : number}>`
+  width: ${props => `${props.width/12.5}px`};;
+  min-width: 100px;
+  max-width: 210px;
 
 
   padding-top: 5px;
 
   font-size: 14px;
+  ${props => props.width >= 3000 && {fontSize : 28.5}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {fontSize : `${props.width/90}px`}};
+  ${props => props.width < 1250 && {fontSize : 14}};
   text-align: left;
 
   position: relative;
   left : 40px;
+  ${props => props.width >= 3000 && {left : 100}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {left : `${props.width/25}px`}};
+  ${props => props.width < 1250 && {left : 50}};
 `
 
 const MoreItem = styled.button`
