@@ -295,13 +295,13 @@ const WordBox = styled.div<{width : number}>`
 
   left: 50%;
   transform: translateX(-50%);
-  top : ${props => props.width >= 1000 ? `-${props.width/40}px` : `-20px`};
+  top : ${props => props.width >= 1250 ? `-${props.width/40}px` : `-20px`};
   ${props => props.width >= 3000 && {top : -60}};
   ${props => (props.width < 3000 && props.width >= 1250 )&& {top :`-${props.width/60}px`}};
   ${props => props.width < 1250 && {top : -30}};
 
   font-weight: 900;
   ${props => props.width >= 3000 && {fontSize : 30}};
-  ${props => (props.width < 3000 && props.width >= 1000 )&& {fontSize : `${props.width/80}px`}};
-  ${props => props.width < 1000 && {fontSize : 12.5}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {fontSize : `${props.width/100}px`}};
+  ${props => props.width < 1250 && {fontSize : 11}};
 `

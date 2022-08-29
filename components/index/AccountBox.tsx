@@ -32,7 +32,7 @@ const StyleSection = styled.section<{width : number}>`
   transform: translateX(-50%);
   top: ${props => `${props.width/17}px`};
   ${props => props.width >= 3000 && {top : 140}};
-  ${props => (props.width < 3000 && props.width >= 1250 )&& {top : `${props.width/30}px`}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {top : `${props.width/70}px`}};
   ${props => props.width < 1250 && {top : 70}};
   
   display: flex;
