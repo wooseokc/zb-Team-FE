@@ -38,7 +38,6 @@ const StyleSection = styled.section<{width : number}>`
   display: flex;
   justify-content: space-between;
 
-  margin-bottom: 200px;
 `
 
 const AccountButton = styled.button<{width : number}>`

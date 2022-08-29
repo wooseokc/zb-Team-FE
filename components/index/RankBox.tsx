@@ -15,10 +15,8 @@ export default function RankBox () {
   const rankdispatch : any = useContext(DiffContext).dispatch
   
   async function apiRankE () {
-    console.log(storeWidth)
     await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/gamer-ranking?difficulty=Easy&pageIdx=0&pageSize=3`).then(res => {
       let arr = res.data.contents
-      console.log(storeWidth)
       setEasy(
         arr.map((item, idx) => {
           let rank : number = item.ranking
@@ -93,7 +91,6 @@ export default function RankBox () {
 
   useEffect(() => {
     if (storeWidth === 0) storeWidth = window.innerWidth
-    console.log(storeWidth)
     apiRankE()
     apiRankM()
     apiRankH()
@@ -254,11 +251,12 @@ const RankTime = styled.div<{width: number}>`
   font-weight: 900;
   text-align: left;
 
+  white-space: nowrap;
   position: relative;
   left : ${props => props.width <= 2500 ? `${props.width/25}px` : '100px'};
   ${props => props.width >= 3000 && {left : 110}};
   ${props => (props.width < 3000 && props.width >= 1250 )&& {left :`${props.width/25}px`}};
-  ${props => props.width < 1250 && {left : 70}};
+  ${props => props.width < 1250 && {left : 60}};
 `
 
 const RankBoxss = styled.div<{value?, width : number}>`

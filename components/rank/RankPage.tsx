@@ -8,7 +8,6 @@ import { debounce } from "lodash";
 
 export default function RankPage () {
   const rankDiff = useContext(DiffContext).diff.diff
-  console.log(rankDiff)
   let storeWidth : number = useContext(DiffContext).width.width
   const [diff, setDiff] = useState(rankDiff)
   const [page, setPage] = useState(0)
@@ -129,7 +128,7 @@ export default function RankPage () {
         <RadioLable width={storeWidth} htmlFor="Hard">고급</RadioLable>
       </div>
       </DiffSelec>
-      <RankBox onScroll={scrollCheck}>
+      <RankBox width={storeWidth} onScroll={scrollCheck}>
         {rankEle}
       </RankBox>
     </RankSection>
@@ -138,7 +137,7 @@ export default function RankPage () {
 
 const RankSection = styled.section<{width: number}>`
   width: ${props => `${props.width/2.4}px`};
-  height: ${props => `${props.width/2.1}px`};
+  height: ${props => `${props.width/2.5}px`};
   min-width: 520px;
   min-height: 600px;
   max-width: 1071px;
@@ -148,7 +147,7 @@ const RankSection = styled.section<{width: number}>`
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-  top : 30px;
+  top : ${props => `${props.width/60}px`};
 `
 
 const DiffSelec = styled.div`
@@ -158,7 +157,7 @@ const DiffSelec = styled.div`
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-  top : 30px;
+  top : 10px;
 
   display: flex;
   justify-content: space-around;
@@ -192,7 +191,7 @@ const RadioLable = styled.label<{width: number}>`
 
 `
 
-const RankBox = styled.div`
+const RankBox = styled.div<{width: number}>`
   width: 60%;
   height: 75%;
 
@@ -202,7 +201,7 @@ const RankBox = styled.div`
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-  top : 50px;
+  top : ${props => `${props.width/50}px`};
 
   padding: 10px;
 

@@ -34,7 +34,6 @@ export default function Navbar() {
       widthDispatch({type : 'changeWidth', number : window.innerWidth})
 
     }, 100)
-    console.log(storeWidth)
     window.addEventListener('resize' , widthHandle)
   })
   /** */
@@ -192,14 +191,15 @@ const LoginButton = styled.button<{width : number}>`
 
 const LogOutButton = styled.button<{width : number}>`
   background: inherit ; box-shadow:none; padding:0; overflow:visible; cursor:pointer;
-
+  width: 15%;
+  height: 100%;
   min-width : 70px;
-  height : 40px;
   
   border : 0;
   border-radius: 6px;
+  white-space: nowrap;
   outline: 0;
-  font-size: ${props => props.width <= 3000 ? `${props.width/110}px` : `30px`};
+  font-size: ${props => props.width <= 2500 ? `${props.width/120}px` : `27px`};
   
   padding: 5px;
   
