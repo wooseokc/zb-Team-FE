@@ -7,9 +7,9 @@ export default function AccountBox () {
   let storeWidth : number = useContext(DiffContext).width.width
   return (
     <StyleSection width={storeWidth}>
-      <Link href="/info/loginPage">
+      {/* <Link href="/info/loginPage">
         <AccountButton width={storeWidth}>로그인</AccountButton>
-      </Link>
+      </Link> */}
       <Link href="/info/accountPage">
         <AccountButton width={storeWidth}>회원가입</AccountButton>
       </Link>
@@ -36,16 +36,16 @@ const StyleSection = styled.section<{width : number}>`
   ${props => props.width < 1250 && {top : 70}};
   
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 
 `
 
 const AccountButton = styled.button<{width : number}>`
   background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer;
 
-  width : 48%;
+  width : 45%;
   ${props => props.width >= 3000 && {height : 60}};
-  ${props => (props.width < 3000 && props.width >= 1250 )&& {height :  `${props.width/50}px`}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {height :  `${props.width/60}px`}};
   ${props => props.width < 1250 && {height : 30}};
 
   border : 2px solid #3399c5;

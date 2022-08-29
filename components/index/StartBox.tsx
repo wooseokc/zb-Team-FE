@@ -41,7 +41,7 @@ const StartSection = styled.section<{width : number}>`
   position : relative;
   top : ${props => `${props.width/20}px`};
   ${props => props.width >= 3000 && {top : 100}};
-  ${props => (props.width < 3000 && props.width >= 1250 )&& {top :  `${props.width/100}px`}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {top :  `${props.width/120}px`}};
   ${props => props.width < 1250 && {top : 55}};
   left : 50%;
   transform: translateX(-50%);
