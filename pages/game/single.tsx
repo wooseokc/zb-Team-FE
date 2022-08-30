@@ -1,14 +1,21 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import GameSection from "../../components/game/gamebox";
+import GameSectionMobile from "../../components/game/gamebox_mobile";
 import GameSelector from "../../components/game/gameSelector";
 import Layout from "../../components/layout";
 import Navbar from "../../components/navbar";
+import { DiffContext } from "../../src/store/diff";
 
 export default function game () {
   const [width, setWidth] = useState(10)
   const [height, setHeight] = useState(10)
   const [mines, setMines] = useState(10)
+  const [storeWidth, setStoreWidth] = useState(0)
+
+  useEffect(() => {
+    setStoreWidth(window.innerWidth)
+  }, [])
 
   function propsWidth (num : number) {
     setWidth(num);
@@ -23,7 +30,11 @@ export default function game () {
   return (
     <>
       <GameSelector width={propsWidth} height={propsHeight} mine={propsMines}/>
+      {storeWidth > 600 ?
       <GameSection width={width} height={height} mine={mines}/>
+      :
+      <GameSectionMobile width={width} height={height} mine={mines}/>
+    }
     </>
   )
 }

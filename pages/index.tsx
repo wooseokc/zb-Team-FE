@@ -11,10 +11,7 @@ export default function Home () {
   const storeWidth : number = useContext(DiffContext).diff.width
   return (
     <>
-
       <><RankBox /><Start /><AccountBox /></>
-    
-  
     </>
   )
 }
@@ -27,16 +24,10 @@ const Sorry = styled.div`
 
 Home.getLayout = function getLayout(page) {
   return (
-
     <Layout>
-
         <Navbar />
         {page}
-
-    
     </Layout>
-
-
   )
 }
 

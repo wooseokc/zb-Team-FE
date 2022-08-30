@@ -234,6 +234,10 @@ const RankName = styled.div<{width: number}>`
   ${props => props.width >= 3000 && {left : 60}};
   ${props => (props.width < 3000 && props.width >= 1250 )&& {left :`${props.width/30}px`}};
   ${props => props.width < 1250 && {left : 30}};
+  
+  ${props => props.width >= 3000 && {top : -3}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {top : 0}};
+  ${props => props.width < 1250 && {top : 3}};
 
 `
 
@@ -257,6 +261,11 @@ const RankTime = styled.div<{width: number}>`
   ${props => props.width >= 3000 && {left : 110}};
   ${props => (props.width < 3000 && props.width >= 1250 )&& {left :`${props.width/25}px`}};
   ${props => props.width < 1250 && {left : 60}};
+
+    
+  ${props => props.width >= 3000 && {top : -3}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {top : 0}};
+  ${props => props.width < 1250 && {top : 3}};
 `
 
 const RankBoxss = styled.div<{value?, width : number}>`

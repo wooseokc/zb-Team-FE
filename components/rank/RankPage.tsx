@@ -272,7 +272,6 @@ const RankName = styled.div<{width : number}>`
   width: ${props => `${props.width/12.5}px`};;
   min-width: 100px;
   max-width: 210px;
-  padding-top: ${props => `${props.width/280}px`};
 
   font-size: 14px;
   ${props => props.width >= 3000 && {fontSize : 28.5}};
@@ -281,7 +280,13 @@ const RankName = styled.div<{width : number}>`
   text-align: left;
 
   position: relative;
-  top: 0px;
+  top: 5px;
+
+  ${props => props.width >= 3000 && {top : 8}};
+  ${props => (props.width < 3000 && props.width >= 2250 )&& {top : 6}};
+  ${props => (props.width < 2250 && props.width >= 1250 )&& {top : 8}};
+  ${props => props.width < 1250 && {top : 6.5}};
+
   left : 20px;
 
 `
@@ -291,8 +296,6 @@ const RankTime = styled.div<{width : number}>`
   min-width: 100px;
   max-width: 210px;
 
-
-  padding-top: 5px;
 
   font-size: 14px;
   ${props => props.width >= 3000 && {fontSize : 28.5}};
@@ -305,6 +308,10 @@ const RankTime = styled.div<{width : number}>`
   ${props => props.width >= 3000 && {left : 100}};
   ${props => (props.width < 3000 && props.width >= 1250 )&& {left : `${props.width/25}px`}};
   ${props => props.width < 1250 && {left : 50}};
+  
+  ${props => props.width >= 3000 && {top : 15}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {top : 10}};
+  ${props => props.width < 1250 && {top : 5}};
 `
 
 const MoreItem = styled.button`

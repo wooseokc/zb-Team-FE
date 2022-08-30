@@ -1,10 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from 'next/router';
+import { DiffContext } from "../../src/store/diff";
 
 export default function MyPage () {
+  const storeWidth : number = useContext(DiffContext).width.width
   const [listItems, setListItems] = useState<JSX.Element[]>()
   const [loginStatus, setLoginStatus] = useState(true)
   const [carrer, setCarrer] = useState(
@@ -71,7 +73,7 @@ export default function MyPage () {
           let timeArr = dateArr[4].split(':')
 
           return (
-            <GameButton key={gameId} value={gameId} onClick={goToGame}>{'< '} {dateArr[0].slice(0, -1)}년 {dateArr[1].slice(0, -1)}월 {dateArr[2].slice(0, -1)}일 {dateArr[3] === '오후' ? +timeArr[0] + 12 : timeArr[0]}시 {timeArr[1]}분 {'>'} 　　난이도 : {difficulty} </GameButton>
+            <GameButton width={storeWidth} key={gameId} value={gameId} onClick={goToGame}>{'< '} {dateArr[0].slice(0, -1)}년 {dateArr[1].slice(0, -1)}월 {dateArr[2].slice(0, -1)}일 {dateArr[3] === '오후' ? +timeArr[0] + 12 : timeArr[0]}시 {timeArr[1]}분 {'>'} 　　난이도 : {difficulty} </GameButton>
           )
         })
 
@@ -109,37 +111,34 @@ export default function MyPage () {
 
   return (
     <MyPageSection>
-      <PageInfo >나의과거게임</PageInfo>
-      <MyPageItem char={'game'}>       
+      <PageInfo width={storeWidth}>나의과거게임</PageInfo>
+      <MyPageItem  width={storeWidth} char={'game'}>       
         {listItems}
         {(!loginStatus) && 
-          <WaringText>로그인을 안하면 브라우저를 종료하기 전까지의 결과만 다시 볼 수 있습니다</WaringText>
+          <WaringText width={storeWidth}>로그인을 안하면 브라우저를 종료하기 전까지의 결과만 다시 볼 수 있습니다</WaringText>
         }
       </MyPageItem>
-      <PageInfo>나의 업적
-      <button onClick={onSubmit}>stroge</button>
-        <button onClick={clearStore}>clear</button>
-
+      <PageInfo width={storeWidth}>나의 업적
       </PageInfo>
-      <MyPageItem char ={'carrer'}>
+      <MyPageItem  width={storeWidth} char ={'carrer'}>
         {loginStatus ?
           <>
-            <CarrerBox>초급
-              <InfoBox>
+            <CarrerBox width={storeWidth}>초급
+              <InfoBox width={storeWidth}>
                 <CarrerItem>통산 성공 : {carrer.easyCleared}</CarrerItem>
                 <CarrerItem>최고 기록 : {Math.floor(carrer.easyTime / 60000)}분 {((carrer.easyTime % 60000)/1000).toFixed(3)}초 </CarrerItem>
                 <CarrerItem>최고 랭킹 : {carrer.easyRank} </CarrerItem>
               </InfoBox>
             </CarrerBox>
-            <CarrerBox>중급
-              <InfoBox>
+            <CarrerBox width={storeWidth}>중급
+              <InfoBox width={storeWidth}>
                 <CarrerItem>통산 성공 : {carrer.mediumCleared}</CarrerItem>
                 <CarrerItem>최고 기록 : {Math.floor(carrer.mediumTime / 60000)}분 {((carrer.mediumTime % 60000)/1000).toFixed(3)}초</CarrerItem>
                 <CarrerItem>최고 랭킹 : {carrer.mediumRank} </CarrerItem>
               </InfoBox>
             </CarrerBox>
-            <CarrerBox>고급
-              <InfoBox>
+            <CarrerBox width={storeWidth}>고급
+              <InfoBox width={storeWidth}>
                 <CarrerItem>통산 성공 : {carrer.hardCleared} </CarrerItem>
                 <CarrerItem>최고 기록 : {Math.floor(carrer.hardTime / 60000)}분 {((carrer.hardTime % 60000)/1000).toFixed(3)}초</CarrerItem>
                 <CarrerItem>최고 랭킹 : {carrer.hardRank} </CarrerItem>
@@ -147,7 +146,7 @@ export default function MyPage () {
             </CarrerBox>
           </>
          :
-          <WaringText2>로그인해야 볼 수 있어요</WaringText2>
+          <WaringText2 width={storeWidth}>로그인해야 볼 수 있어요</WaringText2>
          }
  
       </MyPageItem>
@@ -161,7 +160,6 @@ export default function MyPage () {
 
 const MyPageSection = styled.section`
   width : 50%;
-  height : 620px;
 
   position : relative;
   left : 50%;
@@ -174,13 +172,24 @@ const MyPageSection = styled.section`
   justify-content: space-around;
 `
 
-const PageInfo = styled.p`
+const PageInfo = styled.p<{width : number}>`
   margin: 0;
+  margin-top: 10px;
+  ${props => props.width >= 3000 && {marginTop : 24}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {marginTop :  `${props.width/125}px`}};
+  ${props => props.width < 1250 && {marginTop : 10}};
+  ${props => props.width >= 3000 && {fontSize : 38.5}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {fontSize :  `${props.width/78}px`}};
+  ${props => props.width < 1250 && {fontSize : 16}};
 `
 
-const MyPageItem = styled.div<{char : string}>`
-  width : 400px;
-  height : ${props => props.char === 'game' ? '310px' : '150px'};
+const MyPageItem = styled.div<{char : string, width : number}>`
+  width : ${props => `${props.width/3.125}px`};
+  min-width: 400px;
+  max-width: 960px;
+
+  min-height: ${props => props.char === 'game' ? `${props.width/6}px` : `${props.width/10}px`};
+
   border : 2px solid #3399c5;
   border-radius: 20px;
 
@@ -192,8 +201,8 @@ const MyPageItem = styled.div<{char : string}>`
   flex-direction: column;
   align-items: center;
 `
-const GameButton = styled.button`
-  width: 350px;
+const GameButton = styled.button<{width : number}>`
+  width: 90%;
   margin-top: 5px;
   background: #76c5da;
   
@@ -202,18 +211,24 @@ const GameButton = styled.button`
   padding: 2px;
   padding-left : 10px;
   padding-right: 10px;
-  height: 25px;
-  font-size: 12px;
+  height: ${props => `${props.width/50}px`};
+  min-height: 25px;
+  max-height: 60px;
+  ${props => props.width >= 3000 && {fontSize : 28.8}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {fontSize :  `${props.width/104}px`}};
+  ${props => props.width < 1250 && {fontSize : 12}};
 
   :hover {
     background: #215c6c;
   }
 `
 
-const CarrerBox = styled.div`
+const CarrerBox = styled.div<{width : number}>`
   width : 90%;
-  height : 100px;
   font-size : 15px ;
+  ${props => props.width >= 3000 && {fontSize : 36}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {fontSize :  `${props.width/83}px`}};
+  ${props => props.width < 1250 && {fontSize : 15}};
   font-weight: bold;
 
   text-align: center;
@@ -222,10 +237,15 @@ const CarrerBox = styled.div`
 
 `
 
-const InfoBox = styled.div`
+const InfoBox = styled.div<{width : number}>`
   width: 100%;
   display: flex;
   justify-content: space-between;
+
+  font-size: 13px;
+  ${props => props.width >= 3000 && {fontSize : 31}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {fontSize :  `${props.width/96}px`}};
+  ${props => props.width < 1250 && {fontSize : 13}};
 
   position: relative;
   left: 50%;
@@ -236,20 +256,25 @@ const InfoBox = styled.div`
 `
 
 const CarrerItem = styled.div`
-  font-size: 13px;
+
 `
 
-const WaringText = styled.div`
+const WaringText = styled.div<{width : number}>`
   font-size: 10px;
+  ${props => props.width >= 3000 && {fontSize : 24}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {fontSize :  `${props.width/125}px`}};
+  ${props => props.width < 1250 && {fontSize : 10}};
   color : #de3535;
 
   position: absolute;
   top : 0px;
 `
-const WaringText2 = styled.div`
+const WaringText2 = styled.div<{width : number}>`
   font-size: 20px;
+  ${props => props.width >= 3000 && {fontSize : 48}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {fontSize :  `${props.width/62.5}px`}};
+  ${props => props.width < 1250 && {fontSize : 20}};
   color : #de3535;
 
   position: absolute;
-  top : 70px;
 `
