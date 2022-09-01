@@ -8,7 +8,7 @@ import { DiffContext } from "../src/store/diff";
 import styled from "styled-components";
 
 export default function Home () {
-  const storeWidth : number = useContext(DiffContext).diff.width
+ 
   return (
     <>
       <><RankBox /><Start /><AccountBox /></>

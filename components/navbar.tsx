@@ -8,11 +8,15 @@ import axios from 'axios'
 import { setAuthToken } from './info/_helpers/setAuthToken'
 import { DiffContext } from '../src/store/diff'
 import { debounce } from 'lodash'
+import { useRouter } from 'next/router';
 
 export default function Navbar() {
   const [tokenIs, setTokenIs] = useState<boolean>(false) 
+  const [UI, setUI] = useState(false)
   const widthDispatch : any = useContext(DiffContext).Widthdispatch
   const storeWidth : any = useContext(DiffContext).width.width
+
+  const router = useRouter();
 
   // const rankDiff = useContext(DiffContext).diff.diff
 
@@ -31,7 +35,11 @@ export default function Navbar() {
     }
 
     const widthHandle = debounce(() => {
-      widthDispatch({type : 'changeWidth', number : window.innerWidth})
+      if (UI) {
+        widthDispatch({type : 'changeWidth', number : window.innerWidth})
+      } else {
+        widthDispatch({type : 'changeWidth', number : 1250})
+      }
 
     }, 100)
     window.addEventListener('resize' , widthHandle)
@@ -68,7 +76,14 @@ export default function Navbar() {
     if (refresh) {
       reissue()
     }
-    widthDispatch({type : 'changeWidth', number : window.innerWidth})
+
+    if (sessionStorage.getItem('uistatus') === 'off') {
+      setUI(false)
+      widthDispatch({type : 'changeWidth', number : 1250})
+    } else {
+      setUI(true)
+      widthDispatch({type : 'changeWidth', number : window.innerWidth})
+    }
   }, [])
 
 
@@ -88,6 +103,22 @@ export default function Navbar() {
     })
   }
 
+  const UIstatus = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('yeah')
+    if (UI) {
+      sessionStorage.setItem('uistatus', 'off')
+      window.location.href = '/';
+
+    } else {
+      sessionStorage.setItem('uistatus', 'on')
+      window.location.href = '/';
+      
+    }
+    
+  }
+
+
+  
 
 
   return (
@@ -113,6 +144,8 @@ export default function Navbar() {
       <Link href="/info/loginPage">
         <LoginButton width={storeWidth}>Log in</LoginButton>
       </Link> }
+
+      <UIcontext onClick={UIstatus} width={storeWidth}>UI 최적화 : {UI ? <UIStatus> On </UIStatus>  : <UIStatus style={{color: 'black'}}> Off</UIStatus> } </UIcontext>
     </NavBox>
     </>
   )
@@ -216,3 +249,25 @@ const LogOutButton = styled.button<{width : number}>`
   }
 `
 
+const UIcontext = styled.button<{width : number}>`
+  background: inherit ; box-shadow:none; padding:0; overflow:visible; cursor:pointer;
+
+
+  position: absolute;
+  right: ${props => props.width <= 1250 ? `-20%` : `-20%`};
+  width: 20%;
+  min-width : 70px;
+  height: 100%;
+  border : 0;
+  border-radius: 6px;
+  outline: 0;
+  font-weight: bold;
+  font-size: ${props => props.width <= 3000 ? `${props.width/110}px` : `30px`};
+`
+
+const UIStatus = styled.div`
+  display: inline;
+
+  color : red
+
+`

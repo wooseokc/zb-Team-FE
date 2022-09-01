@@ -107,7 +107,6 @@ export default function MyLastGame (props: { id: string}) {
       setIdx(i => i + 1)
     }
   }
-
   useInterval(stepGo, inter)
 
   return(
