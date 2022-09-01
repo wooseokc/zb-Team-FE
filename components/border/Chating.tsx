@@ -1,17 +1,36 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styled from 'styled-components';
-import io from 'socket.io-client';
+import SockJS from 'sockjs-client';
+import {Stomp} from '@stomp/stompjs';
+
 
 function Chating() {
   const [text, setText] = useState<string>('');
   const [nickname, setNickname] = useState<string>('test');
-  const [message, setMessage] = useState<string[]>([])
-
-
+  const [message, setMessage] = useState<{name: string, message: string}[]>([])
+  const socket = new SockJS('http://125.132.114.181:8080/stomp/chat');
+  const client = Stomp.over(socket);
+  client.webSocketFactory = function () {
+    return new SockJS('http://125.132.114.181:8080/stomp/chat')
+  }
+  useEffect(() => {
+    client.activate();    
+  },[client])
+  client.onConnect = (frame) => {
+    client.subscribe('/topic/lobby', (data) => {
+      const messagedata = JSON.parse(data.body);
+      setMessage([...message, messagedata])
+    })
+  }
+  
 
   const submit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMessage([...message, text])
+    const data = {
+      name: nickname,
+      message: text
+    }
+    setMessage([...message, data])
     setText('');
     const target = e.target as HTMLElement
     if (target.previousSibling) {
@@ -19,22 +38,32 @@ function Chating() {
       const ele = await element as HTMLElement;
       ele.scrollTop = ele.scrollHeight - ele.clientHeight;
     }
+    client.activate();
+    client.publish({
+      destination: '/pub/lobby',
+      body: JSON.stringify({ name: nickname, message: text }),
+      headers: { priority: '9' },
+    });
+    client.onConnect = (frame) => {
+    }
+    
   }
   
-
+  console.log(message);
   return (
     <>
       <ChatingBox>
         {message.map<ReactElement>((item, idx) => (
           
             <li key={idx}>
-              <NicknameSpan >{nickname} :</NicknameSpan>{item}
+              <NicknameSpan >{item.name} :</NicknameSpan>{item.message}
             </li>
           
         ))}
       </ChatingBox>
       <Inputform onSubmit={submit}>
-        <InputText type='text' id='inputText' onChange={(e) => setText(e.target.value)} value={text} autoFocus />
+        <InputText type='text' id='nickname' onChange={(e) => setNickname(e.target.value)} value={nickname} autoFocus />
+        <InputText type='text' id='message' onChange={(e) => setText(e.target.value)} value={text} autoFocus />
         <TextSubmit type='submit' value='작성하기'/>
       </Inputform>
     </>
@@ -91,7 +120,9 @@ const NicknameSpan = styled.span`
   display: inline-block;
 `;
 const InputText = styled.input`
-  width: 400px;
+  width: ${props => props.id === 'nickname' ? '100' : '300'}px;
+  
+  box-sizing: border-box;
 `;
 const TextSubmit = styled.input`
   width: 100px;

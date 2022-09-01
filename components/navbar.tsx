@@ -128,7 +128,7 @@ export default function Navbar() {
       </Link>
       <NavListBox>
         <Link href="/board/list">
-          <NavButton width={storeWidth}>자유게시판</NavButton>
+          <NavButton width={storeWidth}>채팅하기</NavButton>
         </Link>
         <Link href="/board/rank">
           <NavButton width={storeWidth}>랭킹보기</NavButton>
