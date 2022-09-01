@@ -1,24 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Link from 'next/link'
-import Image from 'next/image'
-// import Bomb from './images/free-icon-bomb.png'
 import React, { useEffect, useState, useContext } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import { setAuthToken } from './info/_helpers/setAuthToken'
 import { DiffContext } from '../src/store/diff'
 import { debounce } from 'lodash'
-import { useRouter } from 'next/router';
 
 export default function Navbar() {
   const [tokenIs, setTokenIs] = useState<boolean>(false) 
   const [UI, setUI] = useState(false)
   const widthDispatch : any = useContext(DiffContext).Widthdispatch
-  const storeWidth : any = useContext(DiffContext).width.width
+  const storeWidth : number = useContext(DiffContext).width.width
 
-  const router = useRouter();
-
-  // const rankDiff = useContext(DiffContext).diff.diff
 
   useEffect(() => {
     let token: string | null = null
@@ -33,7 +27,10 @@ export default function Navbar() {
     if (token !== null) {
       setAuthToken(token)
     }
+    
+  })
 
+  useEffect(() => {
     const widthHandle = debounce(() => {
       if (UI) {
         widthDispatch({type : 'changeWidth', number : window.innerWidth})
@@ -42,8 +39,10 @@ export default function Navbar() {
       }
 
     }, 100)
+
     window.addEventListener('resize' , widthHandle)
-  })
+    return () => window.removeEventListener('resize' , widthHandle)
+  }, [storeWidth])
   /** */
   useEffect(() => {
     const token = {
@@ -80,7 +79,7 @@ export default function Navbar() {
     if (sessionStorage.getItem('uistatus') === 'off') {
       setUI(false)
       widthDispatch({type : 'changeWidth', number : 1250})
-    } else {
+    } else if (sessionStorage.getItem('uistatus') === 'on') {
       setUI(true)
       widthDispatch({type : 'changeWidth', number : window.innerWidth})
     }
@@ -111,10 +110,8 @@ export default function Navbar() {
 
     } else {
       sessionStorage.setItem('uistatus', 'on')
-      window.location.href = '/';
-      
-    }
-    
+      window.location.href = '/'; 
+    } 
   }
 
 
@@ -254,7 +251,7 @@ const UIcontext = styled.button<{width : number}>`
 
 
   position: absolute;
-  right: ${props => props.width <= 1250 ? `-20%` : `-20%`};
+  right: ${props => props.width <= 3000 ? `-20%` : `-25%`};
   width: 20%;
   min-width : 70px;
   height: 100%;

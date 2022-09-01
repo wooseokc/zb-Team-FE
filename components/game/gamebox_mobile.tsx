@@ -58,11 +58,7 @@ export default function GameSectionMobile (props : props) {
 
   // 지뢰 심는 작업
   useEffect(()=> {
-
     let tmpArr = Array(total).fill(0).map((item, idx) => [idx, 'closed', 'normal', 0, false]);
-    // [0] = 데이터 번호, [1] = 박스 상태 (열렸는지 아직 닫혀있는지) [2] = 지뢰인지 아닌지 
-    //[3] = 주변에 지뢰 몇개인지 [4] = 깃발이 있는지 없는지
-
     let mineCount = howManyMines; // 지뢰 개수
     setGameStatus(null)
     while (mineCount > 0) {

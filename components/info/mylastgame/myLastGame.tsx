@@ -1,6 +1,7 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
+import { DiffContext } from "../../../src/store/diff";
 import useInterval from "../../hooks/useInterval";
 
 export default function MyLastGame (props: { id: string}) {
@@ -13,6 +14,9 @@ export default function MyLastGame (props: { id: string}) {
   const [time, setTime] = useState(0)
   const [inter, setInter] = useState<null | number>(null)
   const [suc, setSuc] = useState(false)
+
+  const storeWidth : number = useContext(DiffContext).width.width
+  const mineBoxSize = storeWidth/50
 
   useEffect(() => {
     if (props.id) {
@@ -56,7 +60,7 @@ export default function MyLastGame (props: { id: string}) {
         const flagB : boolean = item[4] as boolean
   
         return (
-          <MineBox status={status} mine={mine} key={idx} data-x={index%10}  data-y={Math.floor(index/10)} data-t={index} around={around} flag={flagB}> {(around !== 0 && status === 'open' && mine === 'normal') && around} {(flagB === true && status === 'closed') && 'F'}</MineBox>
+          <MineBox storeWidth={storeWidth} mineSize={mineBoxSize} status={status} mine={mine} key={idx} data-x={index%10}  data-y={Math.floor(index/10)} data-t={index} around={around} flag={flagB}> {(around !== 0 && status === 'open' && mine === 'normal') && around} {(flagB === true && status === 'closed') && 'F'}</MineBox>
         )
       })
       setMineItems(mines)
@@ -111,14 +115,14 @@ export default function MyLastGame (props: { id: string}) {
 
   return(
     <GameContainer>
-      <StartButton onClick={play}>재생</StartButton>
+      <StartButton storeWidth={storeWidth}  onClick={play}>재생</StartButton>
       {mineItems !== undefined && 
-        <GameBox width={width} height={height}>
+        <GameBox width={width} height={height} storeWidth={storeWidth} mineSize={mineBoxSize}>
           {mineItems}
         </GameBox>
       }
-      <SucessBox condition={suc}> 성공 ~
-        <RetryButton onClick={rePlay} >다시보기</RetryButton>
+      <SucessBox storeWidth={storeWidth} condition={suc}> 성공 ~
+        <RetryButton storeWidth={storeWidth} onClick={rePlay} >다시보기</RetryButton>
       </SucessBox>
     </GameContainer>
   )
@@ -140,8 +144,14 @@ const GameContainer = styled.section`
   top : 100px;
 `
 
-const GameBox = styled.div<{width : number, height : number}>`
-  ${props => props.width && {width : props.width *25, height : props.height * 25}}
+const GameBox = styled.div<{width : number, height : number,  storeWidth : number, mineSize : number}>`
+  ${props => props.width && {width : props.width * props.mineSize, height : props.height * props.mineSize}}
+  min-width: ${props => `${props.width * 25}px`};
+  min-height: ${props => `${props.height * 25}px`};
+  max-width: ${props => `${props.width * 60}px`};
+  max-height: ${props => `${props.height * 60}px`};
+
+
   border : 1px solid;
   border-radius: 10px;
   background-color: #49add8;
@@ -152,15 +162,33 @@ const GameBox = styled.div<{width : number, height : number}>`
   left : 50%;
   transform: translateX(-50%);
   top : 20px;
+  ${props => props.storeWidth >= 3000 && {top : 150}};
+  ${props => (props.storeWidth < 3000 && props.storeWidth >= 1250 )&& {top : `${props.storeWidth/20}px`}};
+  ${props => props.storeWidth < 1250 && {top : 62.5}};
 
   display : grid;
   grid-template-columns: repeat(${props => props.width}, 1fr);
   grid-template-rows : repeat(${props => props.height}, 1fr);
 `
 
-const MineBox = styled.div<{status? : string, mine? : string, around? : number, flag? : boolean, canClick? : boolean}>`
+const MineBox = styled.div<{status? : string, mine? : string, around? : number, flag? : boolean, canClick? : boolean, storeWidth : number, mineSize : number}>`
   width: 25px;
   height: 25px;
+
+  width: ${props => `${props.mineSize}px`};
+  height: ${props => `${props.mineSize}px`};
+
+  min-width: 25px;
+  min-height: 25px;
+  max-width: 60px;
+  max-height: 60px;
+
+  font-size: 17px;
+  ${props => props.storeWidth >= 3000 && {fontSize : 41}};
+  ${props => (props.storeWidth < 3000 && props.storeWidth >= 1250 )&& {fontSize : `${props.storeWidth/73.5}px`}};
+  ${props => props.storeWidth < 1250 && {fontSize : 17}};
+
+
   box-sizing: border-box;
   border : 1px solid;
 
@@ -185,14 +213,25 @@ const MineBox = styled.div<{status? : string, mine? : string, around? : number, 
     ${props =>( props.status === 'closed' && props.flag === false) && {background : '#464646'}}
   }
 `
-const StartButton = styled.button`
+const StartButton = styled.button<{storeWidth : number}>`
   width: 50px;
   height: 50px;
+
+  width : ${props => `${props.storeWidth/25}px`};
+  height : ${props => `${props.storeWidth/25}px`};
+  min-width : 50px;
+  min-height : 50px;
+  max-width : 120px;
+  max-height : 120px;
   border: 1px solid;
 
   cursor: pointer;
 
   background: pink;
+
+  ${props => props.storeWidth >= 3000 && {fontSize : 34}};
+  ${props => (props.storeWidth < 3000 && props.storeWidth >= 1250 )&& {fontSize : `${props.storeWidth/84}px`}};
+  ${props => props.storeWidth < 1250 && {fontSize : 15}};
 
   position: absolute;
   left: 50%;
@@ -200,17 +239,26 @@ const StartButton = styled.button`
   top : -40px;
 `
 
-const SucessBox = styled.div<{condition : boolean}>`
-  width :300px;
-  height : 200px;
+const SucessBox = styled.div<{condition : boolean, storeWidth : number}>`
+  width : ${props => `${props.storeWidth/4.16}px`};
+  height : ${props => `${props.storeWidth/6.25}px`};
+  min-width :300px;
+  min-height : 200px;
+  max-width : 721px;
+  max-height : 480px;
   background : black;
   opacity : 0.8;
 
-  font-size: 30px;
+  ${props => props.storeWidth >= 3000 && {fontSize : 71.5}};
+  ${props => (props.storeWidth < 3000 && props.storeWidth >= 1250 )&& {fontSize : `${props.storeWidth/42}px`}};
+  ${props => props.storeWidth < 1250 && {fontSize : 30}};
   color : white;
 
   position: absolute;
   top : 100px;
+  ${props => props.storeWidth >= 3000 && {top : 240}};
+  ${props => (props.storeWidth < 3000 && props.storeWidth >= 1250 )&& {top : `${props.storeWidth/12.5}px`}};
+  ${props => props.storeWidth < 1250 && {top : 100}};
   left : 50%;
   transform: translateX(-50%);
 
@@ -219,15 +267,26 @@ const SucessBox = styled.div<{condition : boolean}>`
   text-align: center;
   align-items: center;
 `
-const RetryButton = styled.button`
+const RetryButton = styled.button<{storeWidth : number}>`
   background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer;
 
   width : 100px;
+
   height : 30px;
+
+  width : ${props => `${props.storeWidth/12.5}px`};
+  max-width : 240px;
+  height : ${props => `${props.storeWidth/41.6}px`};
+  min-width :100px;
+  min-height : 30px;
+  max-height : 72.1px;
+
   background : #66FFFF;
 
   color: #000033;
-  font-size: 15px;
+  ${props => props.storeWidth >= 3000 && {fontSize : 36}};
+  ${props => (props.storeWidth < 3000 && props.storeWidth >= 1250 )&& {fontSize : `${props.storeWidth/84}px`}};
+  ${props => props.storeWidth < 1250 && {fontSize : 15}};
   font-weight: bolder;
   
   position: absolute;

@@ -13,6 +13,12 @@ export default function RankBox () {
   const [hard, setHard] = useState<JSX.Element[]>([])
 
   const rankdispatch : any = useContext(DiffContext).dispatch
+
+  useEffect(() => {
+    if (sessionStorage.getItem('uistatus') === 'off') {
+      storeWidth = 1250
+    }
+  }, [])
   
   async function apiRankE () {
     await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/gamer-ranking?difficulty=Easy&pageIdx=0&pageSize=3`).then(res => {
