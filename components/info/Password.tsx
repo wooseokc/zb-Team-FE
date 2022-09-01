@@ -7,7 +7,6 @@ export default function Password() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-  let emailAuthKey = '';
 
   const router = useRouter();
   
@@ -15,11 +14,10 @@ export default function Password() {
     e.preventDefault();
     const data = {
       email: email,
-      validationKey: emailAuthKey,
     }
-    // console.log(data.validationKey);
+        // console.log(data.validationKey);
     try {
-      const respone = await axios.post('https://minesweeper.hanjoon.dev/minesweeper/gamer/validation', data)
+      const respone = await axios.post('https://minesweeper.hanjoon.dev/minesweeper/gamer/password', data)
       // console.log(respone);
       if (respone.data) {
         router.push('/');
@@ -41,17 +39,16 @@ export default function Password() {
       setError('');
     }
     const data = {
-      email: email,
+      email,
     }
-    await axios.patch('https://minesweeper.hanjoon.dev/minesweeper/gamer/validation', data)
-    // console.log(respone);
+    const respone = await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/gamer/email/${email}`)
+    console.log(typeof respone.data);
+    if (respone.data === true) {
+      setError('ID를 확인해주세요.')
+    }
   }
 
-  const AuthNumberHandler = (e: React.FormEvent<HTMLInputElement>) => {
-    const { currentTarget: { value } } = e;
-    emailAuthKey = value;
-    // console.log(emailAuthKey)
-  }
+
 
   return (
     <StyleForm onSubmit={onSubmit}>
@@ -66,10 +63,6 @@ export default function Password() {
         <PasswordAuthEmailAuthBtn type='button' value='이메일 인증' onClick={emailAuthSubmit} />
       </PasswordAuthEmailBox>
       {error && <ErrorSpan className='authError'>{error}</ErrorSpan>}
-      <PasswordAuthNumBox>
-        <PasswordAuthNumName>인증번호</PasswordAuthNumName>
-        <PasswordAuthNumInput type='text' required placeholder='인증번호를 입력해주세요' onChange={AuthNumberHandler}/>
-      </PasswordAuthNumBox>
       <PaaswordAuthSubmitBtn type='submit' value='완료' />
     </StyleForm>
   )
@@ -90,7 +83,7 @@ const StyleForm = styled.form`
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 
   input {
     padding: 0;
