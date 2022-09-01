@@ -39,8 +39,8 @@ export default function Login() {
                 router.push('/info/emailAuthPage')
               }
               else {
-                localStorage.setItem('accessToken', data.accessToken)
-                localStorage.setItem('refreshToken', data.refreshToken)
+                localStorage.setItem('accessToken', data.tokenDto.accessToken)
+                localStorage.setItem('refreshToken', data.tokenDto.refreshToken)
                 sessionStorage.setItem('gamerId', String(data.gamerId))
                 sessionStorage.setItem('email', loginId);
 

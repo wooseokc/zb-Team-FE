@@ -27,7 +27,7 @@ export default function Navbar() {
     if (token !== null) {
       setAuthToken(token)
     }
-    
+  
   })
 
   useEffect(() => {
@@ -61,7 +61,6 @@ export default function Navbar() {
           sessionStorage.setItem('gamerId', data.gamerId)
       })
       .catch(err => {
-        console.log(err.response)
         let error = err.response
         if (error.status === 400) {
           localStorage.clear()
@@ -79,7 +78,8 @@ export default function Navbar() {
     if (sessionStorage.getItem('uistatus') === 'off') {
       setUI(false)
       widthDispatch({type : 'changeWidth', number : 1250})
-    } else if (sessionStorage.getItem('uistatus') === 'on') {
+    } else {
+      sessionStorage.setItem('uistatus', 'on')
       setUI(true)
       widthDispatch({type : 'changeWidth', number : window.innerWidth})
     }
@@ -91,11 +91,9 @@ export default function Navbar() {
       "accessToken": localStorage.getItem('accessToken'),
       "refreshToken": localStorage.getItem('refreshToken')
     }
-    console.log(JSON.stringify(data))
     await axios.post('https://minesweeper.hanjoon.dev/minesweeper/auth/logout', data, {
       headers : {'content-type': 'application/json'},
     }).then((res)=> {
-      console.log(res)
       localStorage.clear()
       sessionStorage.clear()
       window.location.href = '/';
@@ -103,7 +101,6 @@ export default function Navbar() {
   }
 
   const UIstatus = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log('yeah')
     if (UI) {
       sessionStorage.setItem('uistatus', 'off')
       window.location.href = '/';

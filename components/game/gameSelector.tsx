@@ -53,11 +53,11 @@ export default function GameSelector (props: selector) {
 
 const SelectorBox = styled.section<{width : number}>`
   width: ${props => `${props.width/4.16}px`};
-  height:  ${props => `${props.width/41.6}px`};
+  height:  ${props => `${props.width/50.6}px`};
   min-width: 300px;
   min-height: 30px;
   max-width: 720px;
-  max-height: 72px;
+  max-height: 60px;
   border: 3px solid #49add8;
   border-radius: 10px;
   
@@ -68,15 +68,17 @@ const SelectorBox = styled.section<{width : number}>`
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  ${props => props.width >= 3000 && {top : 150}};
-  ${props => (props.width < 3000 && props.width >= 2500 )&& {top : 140}};
-  ${props => (props.width < 2500 && props.width >= 2000 )&& {top : 130}};
-  ${props => (props.width < 2000 && props.width >= 1600 )&& {top : 120}};
-  ${props => (props.width < 1600 && props.width >= 1250 )&& {top : 110}};
-  ${props => props.width < 1250 && {top : 100}};
+  ${props => props.width >= 3000 && {top : 120}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {top : 110}};
+  ${props => (props.width < 2500 && props.width >= 2000 )&& {top : 100}};
+  ${props => (props.width < 2000 && props.width >= 1600 )&& {top : 90}};
+  ${props => (props.width < 1600 && props.width >= 1250 )&& {top : 80}};
+  ${props => props.width < 1250 && {top : 70}};
   
   display: flex;
   justify-content: space-between;
+
+  z-index: 999;
 `
 
 const GameRadio = styled.input<{width : number}>` 

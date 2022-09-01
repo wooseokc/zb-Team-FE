@@ -30,6 +30,7 @@ export default function GameSection (props : props) {
     milli : 0,
     sec : 0,
     min : 0,
+    hour : 0,
   })
   const [timer, setTimer] = useState({
     milli : 0,
@@ -126,7 +127,7 @@ export default function GameSection (props : props) {
   const boxClick = (e: React.MouseEvent<HTMLInputElement>) => {
     if (gameStatus === null) {
       const startDate = new Date();
-      setStartTime({milli : startDate.getMilliseconds(), sec : startDate.getSeconds(), min : startDate.getMinutes()})
+      setStartTime({milli : startDate.getMilliseconds(), sec : startDate.getSeconds(), min : startDate.getMinutes(), hour : startDate.getHours()})
       setGameStatus(37)
     } 
     if (postObj.isMine === undefined) {
@@ -460,6 +461,7 @@ export default function GameSection (props : props) {
   function timerSet () {
     const nowTime = new Date();
 
+    let nowHour = nowTime.getHours()
     let nowMilli = nowTime.getMilliseconds()
     let nowSecond = nowTime.getSeconds()
     let nowMin = nowTime.getMinutes()
@@ -467,7 +469,17 @@ export default function GameSection (props : props) {
     let startMilli = startTime.milli
     let startSecond = startTime.sec
     let startMin = startTime.min
+    let startHour = startTime.hour
 
+
+    while (nowHour !== startHour) {
+      if (nowHour < startHour) {
+        nowHour += 24;
+      }
+
+      nowMin += 60;
+      nowHour --;
+    }
 
     if (nowMilli < startMilli) {
       nowSecond --;
@@ -551,7 +563,13 @@ const GameContainer = styled.section<{storeWidth : number}>`
   position : relative;
   left : 50%;
   transform: translateX(-50%);
-  top : 100px;
+  top : 80px;
+  ${props => props.storeWidth >= 3000 && {top : 80}};
+  ${props => (props.storeWidth < 3000 && props.storeWidth >= 1250 )&& {top : 75}};
+  ${props => (props.storeWidth < 2500 && props.storeWidth >= 2000 )&& {top : 70}};
+  ${props => (props.storeWidth < 2000 && props.storeWidth >= 1600 )&& {top : 65}};
+  ${props => (props.storeWidth < 1600 && props.storeWidth >= 1250 )&& {top : 60}};
+  ${props => props.storeWidth < 1250 && {top : 55}};
 `
 
 const GameInfoBox = styled.div<{storeWidth :number}>`
