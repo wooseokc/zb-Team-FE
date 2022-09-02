@@ -37,7 +37,7 @@ export default function RankBox () {
               <RankItem width={storeWidth} key={rank} rankes={rank}>
                 <RankNum width={storeWidth} rankes={rank}>{rank}</RankNum>
                 <RankName width={storeWidth} >{name}</RankName>
-                <RankTime width={storeWidth} >{min > 0 && `${min} 분`} {sec}.{milli} 초</RankTime>
+                <RankTime width={storeWidth}  min={min} >{min > 0 && `${min} 분`} {sec}.{Math.floor(milli/10)} 초</RankTime>
               </RankItem>
            
             
@@ -63,7 +63,7 @@ export default function RankBox () {
             <RankItem width={storeWidth} key={rank} rankes={rank}>
               <RankNum width={storeWidth}  rankes={rank}>{rank}</RankNum>
               <RankName width={storeWidth} >{name}</RankName>
-              <RankTime width={storeWidth} >{min > 0 && `${min} 분`} {sec}.{milli} 초</RankTime>
+              <RankTime width={storeWidth}  min={min} >{min > 0 && `${min} 분`} {sec}.{Math.floor(milli/10)} 초</RankTime>
             </RankItem>
           )
         })
@@ -87,7 +87,7 @@ export default function RankBox () {
             <RankItem width={storeWidth} key={rank} rankes={rank}>
               <RankNum width={storeWidth}  rankes={rank}>{rank}</RankNum>
               <RankName width={storeWidth} >{name}</RankName>
-              <RankTime width={storeWidth} >{min > 0 && `${min} 분`} {sec}.{milli} 초</RankTime>
+              <RankTime width={storeWidth} min={min} >{min > 0 && `${min} 분`} {sec}.{Math.floor(milli/10)} 초</RankTime>
             </RankItem>
           )
         })
@@ -247,7 +247,7 @@ const RankName = styled.div<{width: number}>`
 
 `
 
-const RankTime = styled.div<{width: number}>`
+const RankTime = styled.div<{width: number, min : number}>`
   height: 25px;
   width: ${props => `${props.width/8}px`};
 
@@ -263,10 +263,14 @@ const RankTime = styled.div<{width: number}>`
 
   white-space: nowrap;
   position: relative;
-  left : ${props => props.width <= 2500 ? `${props.width/25}px` : '100px'};
   ${props => props.width >= 3000 && {left : 110}};
-  ${props => (props.width < 3000 && props.width >= 1250 )&& {left :`${props.width/25}px`}};
-  ${props => props.width < 1250 && {left : 60}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {left :`${props.width/20}px`}};
+  ${props => props.width < 1250 && {left : 70}};
+
+
+  ${props => (props.width >= 3000 && props.min > 0)&& {left : 65}};
+  ${props => (props.width < 3000 && props.width >= 1250 && props.min > 0)&& {left :`${props.width/30}px`}};
+  ${props => (props.width < 1250 && props.min > 0)&& {left : 50}};
 
     
   ${props => props.width >= 3000 && {top : -3}};

@@ -56,8 +56,9 @@ export default function Navbar() {
       .then(res => {
         
           let data = res.data;
-          localStorage.setItem('accessToken', data.accessToken)
-          localStorage.setItem('refreshToken', data.refreshToken)
+          localStorage.setItem('accessToken', data.token.accessToken)
+          localStorage.setItem('refreshToken', data.token.refreshToken)
+          sessionStorage.setItem('gamerId', String(data.gamerId))
           sessionStorage.setItem('gamerId', data.gamerId)
       })
       .catch(err => {
