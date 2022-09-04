@@ -106,7 +106,6 @@ export default function GameSection (props : props) {
       }
     }
     setArr(tmpArr)
-    
 
     let openArr : string[] = []
     let mineArr : string[] = []

@@ -9,6 +9,7 @@ export default function MyPage () {
   const storeWidth : number = useContext(DiffContext).width.width
   const [listItems, setListItems] = useState<JSX.Element[]>()
   const [loginStatus, setLoginStatus] = useState(true)
+  const [admin, setAdmin] = useState(false)
   const [carrer, setCarrer] = useState(
     {
       easyCleared : 0,
@@ -43,6 +44,12 @@ export default function MyPage () {
           mediumRank: data.mediumRank,
           mediumTime: data.mediumTime
         })
+
+        if (data.isAdmin) {
+          setAdmin(true) 
+        } else {
+          setAdmin(false)
+        }
       })
     }
 
@@ -83,6 +90,8 @@ export default function MyPage () {
       }).catch(() => {
       })
     } 
+
+    
   }, [])
 
 
@@ -94,23 +103,16 @@ export default function MyPage () {
     router.push(`/info/mylastgame/${value}`)
   }
 
-  const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    
-    console.log(sessionStorage.getItem('gamerId'))
-    console.log(localStorage.getItem('accessToken'))
-    console.log(localStorage.getItem('refreshToken'))
-    console.log(localStorage)
+  const goToAdmin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    router.push(`/info/adminpage`)
   }
 
-  const clearStore = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    localStorage.clear()
-    sessionStorage.clear()
-  }
 
 
 
   return (
     <MyPageSection>
+       {admin && <AdminButton onClick={goToAdmin}>관리자</AdminButton>}
       <PageInfo width={storeWidth}>나의과거게임</PageInfo>
       <MyPageItem  width={storeWidth} char={'game'}>       
         {listItems}
@@ -277,4 +279,16 @@ const WaringText2 = styled.div<{width : number}>`
   color : #de3535;
 
   position: absolute;
+`
+
+const AdminButton = styled.button`
+  width : 100px;
+  height: 20px;
+  background-color: pink;
+
+  position: absolute;
+  left : 50%;
+  bottom: -20px;
+
+  cursor: pointer;
 `
