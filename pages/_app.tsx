@@ -5,7 +5,8 @@ import Layout from '../components/layout'
 import Navbar from '../components/navbar'
 import NavbarMobile from '../components/navbar_mobile'
 import Diffstrore from '../src/store/diff'
-import { BrowserView, MobileView, isBrowser, isMobile  } from 'react-device-detect'
+import { isMobile  } from 'react-device-detect'
+import GS from '../src/styles/global'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   // Use the layout defined at the page level, if available
@@ -22,9 +23,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
 
   const theme: DefaultTheme = {
-
+    
   }
+
   return (<>
+              <GS/>
     <ThemeProvider theme={theme}>
       <Layout>
         <Diffstrore>
@@ -35,8 +38,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           </>
           :
           <>
-              <NavbarMobile />
-              <Component {...pageProps} />
+            <NavbarMobile />
+            <Component {...pageProps} />
           </> 
           
         }

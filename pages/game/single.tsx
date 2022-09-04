@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import GameSection from "../../components/game/gamebox";
 import GameSectionMobile from "../../components/game/gamebox_mobile";
 import GameSelector from "../../components/game/gameSelector";

@@ -1,19 +1,11 @@
 import { createGlobalStyle } from "styled-components";
 
-export default createGlobalStyle`
+const GS = createGlobalStyle`
+
   * {
-    margin : 0;
-    padding : 0;
-    outline : 0;
-    box-sizing : border-box;
+    font-family: 'Noto Sans KR', sans-serif;
   }
+`;
 
-  #root {
-    margin : 0 auto;
-  }
-
-  html {
-    background : #fff;
-  }
-`
+export default GS
 
