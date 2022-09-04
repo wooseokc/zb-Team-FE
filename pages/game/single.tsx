@@ -5,17 +5,24 @@ import GameSectionMobile from "../../components/game/gamebox_mobile";
 import GameSelector from "../../components/game/gameSelector";
 import Layout from "../../components/layout";
 import Navbar from "../../components/navbar";
-import { DiffContext } from "../../src/store/diff";
+import { isMobile  } from 'react-device-detect'
 
 export default function game () {
   const [width, setWidth] = useState(10)
   const [height, setHeight] = useState(10)
   const [mines, setMines] = useState(10)
-  const [storeWidth, setStoreWidth] = useState(0)
+  const [device, setDevice] = useState(true)
 
   useEffect(() => {
-    setStoreWidth(window.innerWidth)
+
+    if (isMobile) {
+      setDevice(false)
+    } else {
+      setDevice(true)
+    }
   }, [])
+
+
 
   function propsWidth (num : number) {
     setWidth(num);
@@ -30,7 +37,7 @@ export default function game () {
   return (
     <>
       <GameSelector width={propsWidth} height={propsHeight} mine={propsMines}/>
-      {storeWidth > 600 ?
+      {device ?
       <GameSection width={width} height={height} mine={mines}/>
       :
       <GameSectionMobile width={width} height={height} mine={mines}/>

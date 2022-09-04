@@ -21,10 +21,13 @@ export default function RankBox () {
   }, [])
   
   async function apiRankE () {
-    await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/gamer-ranking?difficulty=Easy&pageIdx=0&pageSize=3`).then(res => {
-      let arr = res.data.contents
+    await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/ranking`).then(res => {
+
+      console.log(res)
+
+      let easy = res.data.easy
       setEasy(
-        arr.map((item, idx) => {
+        easy.map((item, idx) => {
           let rank : number = item.ranking
           let name : string = item.name
           let time : number = item.time
@@ -44,13 +47,10 @@ export default function RankBox () {
           )
         })
       )
-    })
-  }
-  async function apiRankM () {
-    await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/gamer-ranking?difficulty=Medium&pageIdx=0&pageSize=3`).then(res => {
-      let arr = res.data.contents
+
+      let medium =  res.data.medium
       setMedium(
-        arr.map((item, idx) => {
+        medium.map((item, idx) => {
           let rank : number = item.ranking
           let name : string = item.name
           let time : number = item.time
@@ -68,13 +68,11 @@ export default function RankBox () {
           )
         })
       )
-    })
-  }
-  async function apiRankH () {
-    await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/gamer-ranking?difficulty=Hard&pageIdx=0&pageSize=3`).then(res => {
-      let arr = res.data.contents
+
+
+      let hard = res.data.hard
       setHard(
-        arr.map((item, idx) => {
+        hard.map((item, idx) => {
           let rank : number = item.ranking
           let name : string = item.name
           let time : number = item.time
@@ -94,12 +92,60 @@ export default function RankBox () {
       )
     })
   }
+  // async function apiRankM () {
+  //   await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/gamer-ranking?difficulty=Medium&pageIdx=0&pageSize=3`).then(res => {
+  //     let arr = res.data.contents
+  //     setMedium(
+  //       arr.map((item, idx) => {
+  //         let rank : number = item.ranking
+  //         let name : string = item.name
+  //         let time : number = item.time
+  //         let milli : number = time%1000;
+  //         time = Math.floor(time / 1000);
+  //         let sec : number = time % 60
+  //         time = Math.floor(time/60);
+  //         let min : number = time
+  //         return (
+  //           <RankItem width={storeWidth} key={rank} rankes={rank}>
+  //             <RankNum width={storeWidth}  rankes={rank}>{rank}</RankNum>
+  //             <RankName width={storeWidth} >{name}</RankName>
+  //             <RankTime width={storeWidth}  min={min} >{min > 0 && `${min} 분`} {sec}.{Math.floor(milli/10)} 초</RankTime>
+  //           </RankItem>
+  //         )
+  //       })
+  //     )
+  //   })
+  // }
+  // async function apiRankH () {
+  //   await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/gamer-ranking?difficulty=Hard&pageIdx=0&pageSize=3`).then(res => {
+  //     let arr = res.data.contents
+  //     setHard(
+  //       arr.map((item, idx) => {
+  //         let rank : number = item.ranking
+  //         let name : string = item.name
+  //         let time : number = item.time
+  //         let milli : number = time%1000;
+  //         time = Math.floor(time / 1000);
+  //         let sec : number = time % 60
+  //         time = Math.floor(time/60);
+  //         let min : number = time
+  //         return (
+  //           <RankItem width={storeWidth} key={rank} rankes={rank}>
+  //             <RankNum width={storeWidth}  rankes={rank}>{rank}</RankNum>
+  //             <RankName width={storeWidth} >{name}</RankName>
+  //             <RankTime width={storeWidth} min={min} >{min > 0 && `${min} 분`} {sec}.{Math.floor(milli/10)} 초</RankTime>
+  //           </RankItem>
+  //         )
+  //       })
+  //     )
+  //   })
+  // }
 
   useEffect(() => {
     if (storeWidth === 0) storeWidth = window.innerWidth
     apiRankE()
-    apiRankM()
-    apiRankH()
+    // apiRankM()
+    // apiRankH()
   },[])
 
   const DivClick = (e: React.MouseEvent<HTMLDivElement>) => {
