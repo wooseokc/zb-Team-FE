@@ -265,7 +265,13 @@ const RankNum = styled.div<{rankes : number, width : number}>`
 
   text-align: center;
 
-  ${props => (props.rankes === 1 ||  props.rankes === 2 ||  props.rankes === 3) && {paddingTop : '0px'}}
+  position: relative;
+
+  ${props => props.width >= 3000 && {top : -7}};
+  ${props => (props.width < 3000 && props.width >= 2000 )&& {top : -5}};
+  ${props => (props.width < 2000 && props.width >= 1250 )&& {top : -3}};
+  ${props => props.width < 1250 && {top : -2}};
+
 `
 const RankName = styled.div<{width: number}>`
   height: 25px;
@@ -287,9 +293,9 @@ const RankName = styled.div<{width: number}>`
   ${props => (props.width < 3000 && props.width >= 1250 )&& {left :`${props.width/30}px`}};
   ${props => props.width < 1250 && {left : 30}};
   
-  ${props => props.width >= 3000 && {top : -3}};
-  ${props => (props.width < 3000 && props.width >= 1250 )&& {top : 0}};
-  ${props => props.width < 1250 && {top : 3}};
+  ${props => props.width >= 3000 && {top : -10}};
+  ${props => (props.width < 3000 && props.width >= 1250 )&& {top :-2}};
+  ${props => props.width < 1250 && {top : 1}};
 
 `
 
