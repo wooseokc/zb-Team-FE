@@ -25,8 +25,22 @@ export default function AdminPage () {
     setSearch(e.currentTarget.value)
   }
 
-  const userBan = (e : React.MouseEvent<HTMLButtonElement>) => {
-    console.log(e.currentTarget.value)
+  const userBan = async (e : React.MouseEvent<HTMLButtonElement>) => {
+    await axios.delete(`https://minesweeper.hanjoon.dev:443/minesweeper/gamer/${e.currentTarget.value}`).then(res =>{
+      console.log(res)
+    })
+  }
+  const userSuspend = async (e : React.MouseEvent<HTMLButtonElement>) => {
+    if (e.currentTarget.innerHTML === '정지하기') {
+      await axios.patch(`https://minesweeper.hanjoon.dev:443/minesweeper/gamer/${e.currentTarget.value}/suspension/true`).then(res => {
+        console.log(res)
+      })
+    } else {
+      await axios.patch(`https://minesweeper.hanjoon.dev:443/minesweeper/gamer/${e.currentTarget.value}/suspension/false`).then(res => {
+        console.log(res)
+      })
+    }
+
   }
 
   
@@ -39,11 +53,19 @@ export default function AdminPage () {
 
         return (
           <UserItem key={item.name}>
+            <div>
             <span>{item.name}</span>
-            <span>{item.email}</span>
+            <br/>
+            <span>{item.mail}</span>
+
+            </div>
 
             <button onClick={userBan} value={item.id}>탈퇴</button>
-            <button>정지</button>
+            {item.suspend ?
+            <button onClick={userSuspend} value={item.id}>정지풀기</button>
+            :
+            <button onClick={userSuspend} value={item.id}>정지하기</button>
+          }
           </UserItem>
         )
       })
