@@ -1,9 +1,7 @@
-import React, { ReactElement, ReactHTMLElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import styled from 'styled-components';
-import SockJS from 'sockjs-client';
 import { ws } from './chat/Chathook';
 import axios from 'axios';
-import { ConsoleView } from 'react-device-detect';
 
 
 //https://minesweeper.hanjoon.dev/minesweeper/stomp/chat
@@ -14,12 +12,19 @@ function Chating() {
   const [text, setText] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
   const [message, setMessage] = useState<{ name: string, message: string }[]>([])
+  let gameName: string | null = '';
+  if (typeof window !== 'undefined') {
+    gameName = sessionStorage.getItem('gamerName')
+  }
   // const url = 'https://minesweeper.hanjoon.dev/minesweeper/stomp/chat'
   // let sock = new SockJS(url);
   // let ws = Stomp.over(sock);
-  const inputNick = (e:React.ChangeEvent<HTMLInputElement>) => {
-    // e.target.readOnly = !e.target.readOnly;
-    setNickname(e.target.value)
+  console.log(gameName);
+  
+  const inputNick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (nickname) {
+      e.target.disabled = !e.target.disabled;
+    }
   }
 
   ws.onConnect = (frame) => {
@@ -37,6 +42,9 @@ function Chating() {
     //   console.log(res);
     // }
     // chatdata();
+    if (gameName) {
+      setNickname(gameName);
+    }
     ws.activate();
     
   },[]);
@@ -67,8 +75,7 @@ function Chating() {
   }
 
   
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  }
+  
   
 
   return (
@@ -83,12 +90,12 @@ function Chating() {
         ))}
       </ChatingBox>
       <Inputform onSubmit={submit}>
-        <InputText
-          type='text'
-          id='nickname'
-          onBlur={inputNick}
-          autoFocus />
-        <InputText type='text' id='message' onChange={(e) => setText(e.target.value)} value={text} autoFocus />
+        {gameName
+          ? <InputText type='text' id='nickname' disabled value={nickname}  />
+          : <InputText type='text' id='nickname' onChange={e => setNickname(e.target.value)} onBlur={inputNick} value={nickname} autoFocus required />
+        }
+        
+        <InputText type='text' id='message' onChange={(e) => setText(e.target.value)} value={text} />
         <TextSubmit type='submit' value='작성하기'/>
       </Inputform>
     </>

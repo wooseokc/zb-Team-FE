@@ -31,11 +31,12 @@ export default function Login() {
           .post('https://minesweeper.hanjoon.dev/minesweeper/auth/login', loginPayload)
           .then((response) => {
             const data = response.data;
-            
+            console.log(data);
             localStorage.setItem('accessToken', data.token.accessToken)
             localStorage.setItem('refreshToken', data.token.refreshToken)
             sessionStorage.setItem('gamerId', String(data.gamerId))
             sessionStorage.setItem('email', loginId);
+            sessionStorage.setItem('gamerName', data.gamerName);
 
             // JWT 토큰 로컬에 저장
 
