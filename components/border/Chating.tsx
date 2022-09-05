@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState, useRef } from 'react'
 import styled from 'styled-components';
 import { ws } from './chat/Chathook';
 import axios from 'axios';
@@ -11,7 +11,12 @@ import axios from 'axios';
 function Chating() {
   const [text, setText] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
-  const [message, setMessage] = useState<{ name: string, message: string }[]>([])
+  const [message, setMessage] = useState<{ name: string, message: string }[]>([]);
+  const scrollRef = useRef(HTMLElement);
+  
+  
+  
+  
   let gameName: string | null = '';
   if (typeof window !== 'undefined') {
     gameName = sessionStorage.getItem('gamerName')
@@ -19,7 +24,6 @@ function Chating() {
   // const url = 'https://minesweeper.hanjoon.dev/minesweeper/stomp/chat'
   // let sock = new SockJS(url);
   // let ws = Stomp.over(sock);
-  console.log(gameName);
   
   const inputNick = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (nickname) {
@@ -38,7 +42,7 @@ function Chating() {
   
   useEffect(() => {
     // const chatdata = async () => {
-    //   const res = await axios.get('https://minesweeper.hanjoon.dev/minesweeper/chat-lobby')
+    //   const res = await axios.get('https://minesweeper.hanjoon.dev/minesweeper/chat-lobby/')
     //   console.log(res);
     // }
     // chatdata();
@@ -49,7 +53,9 @@ function Chating() {
     
   },[]);
 
-
+  useEffect(() => {
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  },[message])
   const send = (data: { name: string, message: string }) => {
     if (ws.connected) {
       
@@ -71,16 +77,12 @@ function Chating() {
     // setMessage([...message, data])
     send(data);
     setText('');
-
+    
   }
-
-  
-  
-  
 
   return (
     <>
-      <ChatingBox>
+      <ChatingBox ref={scrollRef}>
         {message.map<ReactElement>((item, idx) => (
           
             <li key={idx}>
@@ -92,7 +94,7 @@ function Chating() {
       <Inputform onSubmit={submit}>
         {gameName
           ? <InputText type='text' id='nickname' disabled value={nickname}  />
-          : <InputText type='text' id='nickname' onChange={e => setNickname(e.target.value)} onBlur={inputNick} value={nickname} autoFocus required />
+          : <InputText type='text' id='nickname' maxLength={10} onChange={e => setNickname(e.target.value)} onBlur={inputNick} value={nickname} autoFocus required />
         }
         
         <InputText type='text' id='message' onChange={(e) => setText(e.target.value)} value={text} />
