@@ -1,27 +1,65 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styled from 'styled-components';
-import SockJS from 'sockjs-client';
-import {Stomp} from '@stomp/stompjs';
+import { ws } from './chat/Chathook';
+import axios from 'axios';
 
+
+//https://minesweeper.hanjoon.dev/minesweeper/stomp/chat
+//subscribe('/topic/lobby'
+// /pub/lobby 
 
 function Chating() {
   const [text, setText] = useState<string>('');
-  const [nickname, setNickname] = useState<string>('test');
-  const [message, setMessage] = useState<{name: string, message: string}[]>([])
-  const socket = new SockJS('http://125.132.114.181:8080/stomp/chat');
-  const client = Stomp.over(socket);
-  client.webSocketFactory = function () {
-    return new SockJS('http://125.132.114.181:8080/stomp/chat')
+  const [nickname, setNickname] = useState<string>('');
+  const [message, setMessage] = useState<{ name: string, message: string }[]>([])
+  let gameName: string | null = '';
+  if (typeof window !== 'undefined') {
+    gameName = sessionStorage.getItem('gamerName')
   }
-  useEffect(() => {
-    client.activate();    
-  },[client])
-  client.onConnect = (frame) => {
-    client.subscribe('/topic/lobby', (data) => {
-      const messagedata = JSON.parse(data.body);
-      setMessage([...message, messagedata])
+  // const url = 'https://minesweeper.hanjoon.dev/minesweeper/stomp/chat'
+  // let sock = new SockJS(url);
+  // let ws = Stomp.over(sock);
+  console.log(gameName);
+  
+  const inputNick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (nickname) {
+      e.target.disabled = !e.target.disabled;
+    }
+  }
+
+  ws.onConnect = (frame) => {
+    ws.subscribe('/topic/lobby', (data) => {
+      const res = JSON.parse(data.body);
+      console.log(res.name, 'nick'+nickname);
+        setMessage(prev => [...prev, {name: res.name, message: res.message}])  
+      
     })
   }
+  
+  useEffect(() => {
+    // const chatdata = async () => {
+    //   const res = await axios.get('https://minesweeper.hanjoon.dev/minesweeper/chat-lobby')
+    //   console.log(res);
+    // }
+    // chatdata();
+    if (gameName) {
+      setNickname(gameName);
+    }
+    ws.activate();
+    
+  },[]);
+
+
+  const send = (data: { name: string, message: string }) => {
+    if (ws.connected) {
+      
+      ws.publish({
+        destination: '/pub/lobby',
+        body: JSON.stringify({ name: data.name, message: data.message }),
+      });
+    }
+  
+};
   
 
   const submit = async(e: React.FormEvent<HTMLFormElement>) => {
@@ -30,26 +68,16 @@ function Chating() {
       name: nickname,
       message: text
     }
-    setMessage([...message, data])
+    // setMessage([...message, data])
+    send(data);
     setText('');
-    const target = e.target as HTMLElement
-    if (target.previousSibling) {
-      const element = target.previousSibling
-      const ele = await element as HTMLElement;
-      ele.scrollTop = ele.scrollHeight - ele.clientHeight;
-    }
-    client.activate();
-    client.publish({
-      destination: '/pub/lobby',
-      body: JSON.stringify({ name: nickname, message: text }),
-      headers: { priority: '9' },
-    });
-    client.onConnect = (frame) => {
-    }
-    
+
   }
+
   
-  console.log(message);
+  
+  
+
   return (
     <>
       <ChatingBox>
@@ -62,8 +90,12 @@ function Chating() {
         ))}
       </ChatingBox>
       <Inputform onSubmit={submit}>
-        <InputText type='text' id='nickname' onChange={(e) => setNickname(e.target.value)} value={nickname} autoFocus />
-        <InputText type='text' id='message' onChange={(e) => setText(e.target.value)} value={text} autoFocus />
+        {gameName
+          ? <InputText type='text' id='nickname' disabled value={nickname}  />
+          : <InputText type='text' id='nickname' onChange={e => setNickname(e.target.value)} onBlur={inputNick} value={nickname} autoFocus required />
+        }
+        
+        <InputText type='text' id='message' onChange={(e) => setText(e.target.value)} value={text} />
         <TextSubmit type='submit' value='작성하기'/>
       </Inputform>
     </>
@@ -85,7 +117,6 @@ const ChatingBox = styled.ul`
 
   display: flex;
   flex-direction: column;
-  /* overflow: hidden; */
   overflow-y: auto;
   position: relative;
 

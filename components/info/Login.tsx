@@ -16,40 +16,43 @@ export default function Login() {
 
   const regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     // console.log(loginId.length);
     if (loginId.length < 5 || !regExp.test(loginId)) { 
       setError('ID를 확인 해주세요.')
     } else {
-        const loginPayload = {
-          'email': loginId,
-          'password': loginPw,
-        };
+      const loginPayload = {
+        'email': loginId,
+        'password': loginPw,
+      };
+      try {
+        await axios
+          .post('https://minesweeper.hanjoon.dev/minesweeper/auth/login', loginPayload)
+          .then((response) => {
+            const data = response.data;
+            console.log(data);
+            localStorage.setItem('accessToken', data.token.accessToken)
+            localStorage.setItem('refreshToken', data.token.refreshToken)
+            sessionStorage.setItem('gamerId', String(data.gamerId))
+            sessionStorage.setItem('email', loginId);
+            sessionStorage.setItem('gamerName', data.gamerName);
 
-          await axios
-            .post('https://minesweeper.hanjoon.dev/minesweeper/auth/login', loginPayload)
-            .then((response) => {
-              const data = response.data;
+            // JWT 토큰 로컬에 저장
 
-              if (data.errorCode === "USER_NOT_FOUND") {
-                setError('ID와 PASSWORD를 확인 해주세요');
-              } else if (data.errorCode === "NOT_AUTHENTICATED_EMAIL") {
-                sessionStorage.setItem('email', loginId);
-                router.push('/info/emailAuthPage')
-              }
-              else {
-                localStorage.setItem('accessToken', data.token.accessToken)
-                localStorage.setItem('refreshToken', data.token.refreshToken)
-                sessionStorage.setItem('gamerId', String(data.gamerId))
-                sessionStorage.setItem('email', loginId);
+            setAuthToken(data.accessToken);
+            router.push('/');
+          })
+      } catch (e) {
+        // console.log(e.response.data)
+        if (e.response.data.errorCode === "USER_NOT_FOUND") {
+              setError('ID와 PASSWORD를 확인 해주세요');
+        }else if (e.response.data.errorCode === "NOT_AUTHENTICATED_EMAIL") {
+              sessionStorage.setItem('email', loginId);
+              router.push('/info/emailAuthPage')
+        }
+      }
 
-                // JWT 토큰 로컬에 저장
-
-                setAuthToken(data.accessToken);
-                router.push('/');
-              }
-            })
             // .catch(e => {
             //   console.log(e.response);
             //   if (e.response.data.error === 'Unauthorized') {
