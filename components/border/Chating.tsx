@@ -55,7 +55,8 @@ function Chating() {
   }, []);
 
   useEffect(() => {
-    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    const current : any = scrollRef.current;
+    current.scrollTop = current.scrollHeight;
   },[message])
 
   const send = (data: { name: string, message: string }) => {
