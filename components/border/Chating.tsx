@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { ReactElement, useEffect, useState, useRef } from 'react'
 import styled from 'styled-components';
 import { ws } from './chat/Chathook';
-import axios from 'axios';
+// import axios from 'axios';
 
 
 //https://minesweeper.hanjoon.dev/minesweeper/stomp/chat
@@ -12,7 +13,7 @@ function Chating() {
   const [text, setText] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
   const [message, setMessage] = useState<{ name: string, message: string }[]>([]);
-  const scrollRef = useRef(HTMLElement);
+  const scrollRef = useRef();
   
   
   
@@ -51,11 +52,12 @@ function Chating() {
     }
     ws.activate();
     
-  },[]);
+  }, []);
 
   useEffect(() => {
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   },[message])
+
   const send = (data: { name: string, message: string }) => {
     if (ws.connected) {
       
@@ -106,7 +108,7 @@ function Chating() {
 
 export default Chating
 
-const ChatingBox = styled.ul`
+const ChatingBox = styled.ul<{ref : any}>`
   width: 500px;
   height: 500px;
 

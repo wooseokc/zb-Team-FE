@@ -320,26 +320,26 @@ const RankTime = styled.div<{width : number}>`
   ${props => props.width < 1250 && {top : 4}};
 `
 
-const MoreItem = styled.button`
-  width: 30px;
-  height: 30px;
+// const MoreItem = styled.button`
+//   width: 30px;
+//   height: 30px;
   
-  border-radius: 100%;
+//   border-radius: 100%;
 
-  font-size: 15px;
-  font-weight: 900;
+//   font-size: 15px;
+//   font-weight: 900;
 
-  border: 0px;
+//   border: 0px;
 
-  padding: 0;
+//   padding: 0;
 
-  background-color: #49add8;
-  color: #FFF;
+//   background-color: #49add8;
+//   color: #FFF;
 
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+//   position: relative;
+//   left: 50%;
+//   transform: translateX(-50%);
 
-  cursor: pointer;
-`
+//   cursor: pointer;
+// `
 
