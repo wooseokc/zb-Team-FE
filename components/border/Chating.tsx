@@ -32,10 +32,10 @@ function Chating() {
     }
   }
 
-  ws.onConnect = (frame) => {
+  ws.onConnect = () => {
     ws.subscribe('/topic/lobby', (data) => {
       const res = JSON.parse(data.body);
-      console.log(res.name, 'nick'+nickname);
+      // console.log(res.name, 'nick'+nickname);
         setMessage(prev => [...prev, {name: res.name, message: res.message}])  
       
     })
@@ -51,7 +51,9 @@ function Chating() {
       setNickname(gameName);
     }
     ws.activate();
-    
+    return () => {
+      ws.deactivate();
+    }
   }, []);
 
   useEffect(() => {
