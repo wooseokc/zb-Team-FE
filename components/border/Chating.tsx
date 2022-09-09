@@ -14,6 +14,7 @@ function Chating() {
   const [message, setMessage] = useState<{ name: string; message: string }[]>(
     []
   );
+  const [joinUsers, setJoinUsers] = useState<number>(0);
   const scrollRef = useRef();
   const [lastIndex, setLastIndex] = useState<number>(0);
   let gameName: string | null = '';
@@ -35,6 +36,11 @@ function Chating() {
       const res = JSON.parse(data.body);
       // console.log(res.name, 'nick'+nickname);
       setMessage((prev) => [...prev, { name: res.name, message: res.message }]);
+    });
+    ws.subscribe('/topic/lobbyUsers', (data) => {
+      const res = JSON.parse(data.body);
+      console.log(res);
+      setJoinUsers(res);
     });
   };
 
@@ -123,7 +129,8 @@ function Chating() {
   };
 
   return (
-    <>
+    <ChatContainer>
+      <JoinUsers>동시 접속자 : {joinUsers}</JoinUsers>
       <ChatingBox ref={scrollRef} onScroll={onScroll}>
         {message.map<ReactElement>((item, idx) => (
           <li key={idx}>
@@ -154,17 +161,38 @@ function Chating() {
           onChange={(e) => setText(e.target.value)}
           value={text}
         />
-        <TextSubmit type='submit' value='작성하기' />
+        <TextSubmit type='submit' value='전송' />
       </Inputform>
-    </>
+    </ChatContainer>
   );
 }
 
 export default Chating;
 
+const ChatContainer = styled.div`
+  width: 30vw;
+
+  position: relative;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+`;
+
+const JoinUsers = styled.div`
+  width: 100%;
+
+  margin-top: 30px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
 const ChatingBox = styled.ul<{ ref: any }>`
-  width: 500px;
-  height: 500px;
+  width: 100%;
+  min-width: 300px;
+  height: 100%;
 
   border: 2px solid #e6e6e6;
   border-radius: 15px;
@@ -196,7 +224,7 @@ const ChatingBox = styled.ul<{ ref: any }>`
 `;
 
 const Inputform = styled.form`
-  width: 500px;
+  width: 100%;
 
   margin: 0 auto;
 
@@ -205,14 +233,20 @@ const Inputform = styled.form`
   align-items: center;
 `;
 const NicknameSpan = styled.span`
-  width: 100px;
+  width: 90px;
   display: inline-block;
+
+  font-size: 0.8rem;
 `;
 const InputText = styled.input`
-  width: ${(props) => (props.id === 'nickname' ? '100' : '300')}px;
+  width: ${(props) => (props.id === 'nickname' ? '20' : '70')}%;
 
   box-sizing: border-box;
 `;
 const TextSubmit = styled.input`
-  width: 100px;
+  width: 10%;
+
+  padding: 1px 2px;
+
+  text-align: center;
 `;
