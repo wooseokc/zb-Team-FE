@@ -130,11 +130,11 @@ function Chating() {
 
   return (
     <ChatContainer>
-      <JoinUsers>동시 접속자 : {joinUsers}</JoinUsers>
+      {/* <JoinUsers>동시 접속자 : {joinUsers}</JoinUsers> */}
       <ChatingBox ref={scrollRef} onScroll={onScroll}>
         {message.map<ReactElement>((item, idx) => (
           <li key={idx}>
-            <NicknameSpan>{item.name} :</NicknameSpan>
+            <NicknameSpan>{item.name}</NicknameSpan>
             {item.message}
           </li>
         ))}
@@ -171,6 +171,7 @@ export default Chating;
 
 const ChatContainer = styled.div`
   width: 30vw;
+  height: 30vw;
 
   position: relative;
   top: 0;
@@ -233,10 +234,23 @@ const Inputform = styled.form`
   align-items: center;
 `;
 const NicknameSpan = styled.span`
-  width: 90px;
+  width: 15%;
   display: inline-block;
 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   font-size: 0.8rem;
+
+  margin-left: 5%;
+  margin-right: 15%;
+
+  ::after {
+    content: ':';
+    position: absolute;
+    left: 25%;
+  }
 `;
 const InputText = styled.input`
   width: ${(props) => (props.id === 'nickname' ? '20' : '70')}%;

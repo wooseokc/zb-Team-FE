@@ -11,6 +11,7 @@ export default function RankBox () {
   const [easy, setEasy] = useState<JSX.Element[]>([])
   const [medium, setMedium] = useState<JSX.Element[]>([])
   const [hard, setHard] = useState<JSX.Element[]>([])
+  const [loading, setLoading] = useState(false)
 
   const rankdispatch : any = useContext(DiffContext).dispatch
 
@@ -21,8 +22,9 @@ export default function RankBox () {
   }, [])
   
   async function apiRankE () {
+    setLoading(true)
     await axios.get(`https://minesweeper.hanjoon.dev/minesweeper/game/ranking`).then(res => {
-
+      setLoading(false)
       console.log(res)
 
       let easy = res.data.easy
@@ -166,19 +168,19 @@ export default function RankBox () {
           초급
           <Link href="/board/rank">
             <RankBoxss  width={storeWidth} onClick={DivClick} id={'Easy'}>
-              {easy}
+             {loading ? <Loading width={storeWidth}>로딩중이요~</Loading> : easy} 
             </RankBoxss>
           </Link>
           중급
           <Link href="/board/rank">
             <RankBoxss  width={storeWidth} onClick={DivClick} id={'Medium'}>
-              {medium}
+            {loading ? <Loading width={storeWidth}>로딩중이요~</Loading> : medium} 
             </RankBoxss>
           </Link>
           고급
           <Link href="/board/rank">
             <RankBoxss width={storeWidth}  onClick={DivClick} id={'Hard'}>
-              {hard}
+            {loading ? <Loading width={storeWidth}>로딩중이요~</Loading> : hard} 
             </RankBoxss>
           </Link>
         </Box>
@@ -215,6 +217,24 @@ const Box = styled.section<{width : number}>`
   transform: translateX(-50%);
 
   font-weight: 800;
+`
+
+const Loading = styled.div<{width : number}>`
+  position: relative;
+  top: 30%;
+  font-size: ${props =>  `${props.width/80}px`};;
+  
+  animation-name : bump;
+  animation-duration: 1s;
+  @keyframes bump {
+  0% {
+    font-size: ${props =>  `${props.width/80}px`};
+  }
+  100% {
+    font-size: ${props =>  `${props.width/50}px`};
+  }
+  
+}
 `
 
 
