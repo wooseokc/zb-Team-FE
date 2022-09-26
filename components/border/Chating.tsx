@@ -39,7 +39,7 @@ function Chating() {
     });
     ws.subscribe('/topic/lobbyUsers', (data) => {
       const res = JSON.parse(data.body);
-      console.log(res);
+      console.log(`res => ${res}`);
       setJoinUsers(res);
     });
   };
@@ -49,9 +49,11 @@ function Chating() {
       const res = await axios.get(
         'https://minesweeper.hanjoon.dev/minesweeper/chat-lobby/'
       );
+      console.log(res)
       setLastIndex(res.data.lastIndex);
 
       if (res) {
+        setJoinUsers(res.data.users)
         res.data.chatList.map(
           (item: { name: string; message: string }): boolean => {
             setMessage((prev) => [
@@ -130,12 +132,12 @@ function Chating() {
 
   return (
     <ChatContainer>
-      {/* <JoinUsers>동시 접속자 : {joinUsers}</JoinUsers> */}
+      <JoinUsers>동시 접속자 : {joinUsers}</JoinUsers>
       <ChatingBox ref={scrollRef} onScroll={onScroll}>
         {message.map<ReactElement>((item, idx) => (
-          <li key={idx}>
+          <li key={idx} style={{display : 'flex'}}>
             <NicknameSpan>{item.name}</NicknameSpan>
-            {item.message}
+            <ChattingBox> {item.message} </ChattingBox> 
           </li>
         ))}
       </ChatingBox>
@@ -252,6 +254,12 @@ const NicknameSpan = styled.span`
     left: 25%;
   }
 `;
+
+const ChattingBox = styled.div`
+    width: 70%;
+    display: inline-block;
+
+`
 const InputText = styled.input`
   width: ${(props) => (props.id === 'nickname' ? '20' : '70')}%;
 
