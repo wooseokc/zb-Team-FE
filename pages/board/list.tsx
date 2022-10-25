@@ -12,11 +12,11 @@ export default function login () {
   )
 }
 
-login.getLayout = function getLayout(page) {
-  return (
-    <Layout>
-      <Navbar />
-      {page}
-    </Layout>
-  )
-}
+// login.getLayout = function getLayout(page) {
+//   return (
+//     <Layout>
+//       <Navbar />
+//       {page}
+//     </Layout>
+//   )
+// }

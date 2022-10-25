@@ -10,11 +10,11 @@ export default function Rank () {
   )
 }
 
-Rank.getLayout = function getLayout(page) {
-  return (
-    <Layout>
-      <Navbar />
-      {page}
-    </Layout>
-  )
-}
+// Rank.getLayout = function getLayout(page) {
+//   return (
+//     <Layout>
+//       <Navbar />
+//       {page}
+//     </Layout>
+//   )
+// }
