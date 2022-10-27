@@ -18,6 +18,7 @@ export default function Layout({ children }) {
       <meta property="og:title" content="지뢰찾기 | 지뢰찾기 플레이!"></meta>
       <meta property="og:description" content="지뢰찾기를 플레이하고 당신의 게임을 저장하세요!"></meta>
       <meta property="og:type" content="website"></meta>
+      <link rel="canonical" href="https://minesweeper-2283e.web.app/"></link>
         <link rel="icon" href="/free-icon-bomb.png" />
         <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet"></link>
       </Head>
