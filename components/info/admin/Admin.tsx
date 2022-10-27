@@ -12,14 +12,14 @@ export default function AdminPage () {
 
 
   const router = useRouter()
-  // useEffect(() => {
-  //   axios.get(`https://minesweeper.hanjoon.dev:443/minesweeper/gamer/${sessionStorage.getItem('gamerId')}`).then(res => {
+  useEffect(() => {
+    axios.get(`https://minesweeper.hanjoon.dev:443/minesweeper/gamer/${sessionStorage.getItem('gamerId')}`).then(res => {
       
-  //   }).catch(err => {
-  //     router.push(`/`)
-  //   })
+    }).catch(err => {
+      router.push(`/`)
+    })
 
-  // }, [])
+  }, [])
 
   const searchBox = (e : React.FormEvent<HTMLInputElement>) => {
     setSearch(e.currentTarget.value)
